@@ -20,3 +20,10 @@
 
 ## Chạy seed data
 > php artisan db:seed
+
+## Hướng dẫn sử dụng Swagger
+- B1. Tạo hoặc chỉnh sửa file mô tả API trong thư mục: app/Docs
+- B2. Chạy lệnh sau trong terminal để tái tạo file tài liệu:
+    > php artisan l5-swagger:generate
+- B3: Sau khi chạy xong, có thể mở Swagger UI tại:
+    > http://localhost:8000/api/documentation
