@@ -19,9 +19,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+       'name', 'phone_number', 'email', 'password', 'status', 'role_id'
     ];
 
     /**
@@ -42,4 +40,24 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function ownedVenues()
+    {
+        return $this->hasMany(Venue::class, 'owner_id');
+    }
+
+    public function managedVenues()
+    {
+        return $this->belongsToMany(Venue::class, 'venue_managers');
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 }
