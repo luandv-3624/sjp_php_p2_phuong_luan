@@ -2,12 +2,15 @@
 
 namespace App\Exceptions;
 
-use App\Enums\HttpStatusCode;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\ValidationException;
-use App\Helpers\ApiResponse;
+use Illuminate\Auth\AuthenticationException;
 use Throwable;
-use Illuminate\Support\Facades\Log;
 
 class Handler extends ExceptionHandler
 {
@@ -43,32 +46,50 @@ class Handler extends ExceptionHandler
         });
     }
 
-    protected function invalidJson($request, ValidationException $exception)
+    public function render($request, Throwable $e): Response|JsonResponse
     {
-        return ApiResponse::error($exception->getMessage(), $exception->errors(), $exception->status);
-    }
+        if ($request->is('api/*')) {
+            return match (true) {
+                $e instanceof AuthenticationException => response()->json([
+                    'status' => false,
+                    'statusCode' => Response::HTTP_UNAUTHORIZED,
+                    'message' => 'Unauthorized Request.',
+                ], Response::HTTP_UNAUTHORIZED),
 
-    public function render($request, Throwable $exception)
-    {
-        if ($exception instanceof ValidationException) {
-            return ApiResponse::error(
-                'validation_failed',
-                $exception->errors(),
-                $exception->status
-            );
+                $e instanceof ValidationException => response()->json([
+                    'status' => false,
+                    'statusCode' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'message' => 'Validation failed.',
+                    'errors' => $e->errors(),
+                ], Response::HTTP_UNPROCESSABLE_ENTITY),
+
+                $e instanceof NotFoundHttpException => response()->json([
+                    'status' => false,
+                    'statusCode' => Response::HTTP_NOT_FOUND,
+                    'message' => 'Resource not found.',
+                ], Response::HTTP_NOT_FOUND),
+
+                $e instanceof HttpException => response()->json([
+                    'status' => false,
+                    'statusCode' => $e->getStatusCode(),
+                    'message' => $e->getMessage(),
+                ], $e->getStatusCode()),
+
+                $e instanceof RouteNotFoundException => response()->json([
+                    'status' => false,
+                    'statusCode' => Response::HTTP_NOT_FOUND,
+                    'message' => 'Route not found.',
+                ], Response::HTTP_NOT_FOUND),
+
+                default => response()->json([
+                    'status' => false,
+                    'statusCode' => Response::HTTP_INTERNAL_SERVER_ERROR,
+                    'message' => 'An unexpected error occurred.',
+                    'details' => $e->getMessage(),
+                ], Response::HTTP_INTERNAL_SERVER_ERROR),
+            };
         }
 
-        if ($exception instanceof \Exception) {
-            Log::error($exception->getMessage(), ['trace' => $exception->getTraceAsString()]);
-
-            return ApiResponse::error(
-                'Internal server error',
-                [],
-                HttpStatusCode::INTERNAL_SERVER_ERROR
-            );
-        }
-
-        return parent::render($request, $exception);
+        return parent::render($request, $e);
     }
-
 }

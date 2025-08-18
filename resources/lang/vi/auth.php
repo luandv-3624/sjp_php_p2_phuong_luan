@@ -35,4 +35,8 @@ return [
     'reset_password_button' => 'Đặt lại mật khẩu',
     'reset_password_line_2' => 'Nếu không phải bạn yêu cầu, vui lòng bỏ qua email này.',
     'thanks' => 'Trân trọng',
+    'user_not_found' => 'Không tìm thấy người dùng.',
+    'reset_password_request_too_soon' => 'Bạn chỉ có thể yêu cầu đặt lại mật khẩu một lần mỗi phút.',
+    'invalid_token' => 'Mã đặt lại mật khẩu không hợp lệ.',
+    'reset_password_failed_send_mail' => 'Không thể gửi email đặt lại mật khẩu. Vui lòng thử lại sau.',
 ];

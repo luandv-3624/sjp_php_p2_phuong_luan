@@ -36,4 +36,8 @@ return [
     'reset_password_button' => 'Reset Password',
     'reset_password_line_2' => 'If you did not request this, please ignore this email.',
     'thanks' => 'Thanks',
+    'user_not_found' => 'User not found.',
+    'reset_password_request_too_soon' => 'You can only request password reset once per minute.',
+    'invalid_token' => 'Invalid or incorrect reset token.',
+    'reset_password_failed_send_mail' => 'We could not send the reset password email. Please try again later.',
 ];

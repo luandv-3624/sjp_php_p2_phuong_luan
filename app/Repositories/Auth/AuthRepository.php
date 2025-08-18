@@ -30,7 +30,7 @@ class AuthRepository implements AuthRepositoryInterface
                 'token_name' => $tokenName,
                 'trace' => $e->getTraceAsString()
             ]);
-            throw new $e();
+            throw $e;
         }
     }
 

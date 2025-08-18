@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 use App\Mail\VerifyEmail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AuthService
 {
@@ -24,6 +25,7 @@ class AuthService
     protected $accessTokenExpiredTime;
     protected $refreshTokenExpiredTime;
     private const TOKEN_VERIFY_ACCOUNT_EXPIRED_TIME = 15;
+    private const TOKEN_RESET_PASSWORD_EXPIRED_TIME = 15;
 
     protected $passwordResetRepo;
 
@@ -169,45 +171,54 @@ class AuthService
         return ApiResponse::success([], __('auth.resend_verification_success'));
     }
 
-    public function requestPasswordReset(string $email): bool
+    public function requestPasswordReset(string $email)
     {
         $user = $this->userRepo->findByEmail($email);
         if (!$user) {
-            return false;
+            return ApiResponse::error(__('auth.user_not_found'));
         }
 
         $key = 'reset_password_request:' . $email;
 
         if (Cache::has($key)) {
-            return false;
+            return ApiResponse::error(__('auth.reset_password_request_too_soon'));
         }
 
         $token = Str::random(64);
         $this->passwordResetRepo->createToken($email, $token);
 
-        Mail::to($email)->send(new ResetPasswordMail($email, $token));
+        try {
+            Mail::to($email)->send(new ResetPasswordMail($email, $token));
+        } catch (\Throwable $e) {
+            $this->passwordResetRepo->deleteByEmail($email);
 
-        Cache::put($key, true, now()->addMinutes(value: 1));
+            Log::error("Reset password email failed for {$email}", [
+                'error' => $e->getMessage(),
+            ]);
+            return ApiResponse::error(__('auth.reset_password_failed_send_mail'));
+        }
 
-        return true;
+        Cache::put($key, true, now()->addMinutes());
+
+        return ApiResponse::success([], __('auth.reset_password_email_sent'));
     }
 
-    public function resetPassword(string $email, string $plainToken, string $password): bool
+    public function resetPassword(string $email, string $plainToken, string $password)
     {
         $reset = $this->passwordResetRepo->findByToken($email, $plainToken);
         if (!$reset) {
-            return false;
+            return  ApiResponse::error(__('auth.invalid_token'));
         }
 
-        if (Carbon::parse($reset->created_at)->addMinutes(15)->isPast()) {
+        if (Carbon::parse($reset->created_at)->addMinutes(self::TOKEN_RESET_PASSWORD_EXPIRED_TIME)->isPast()) {
             // Token expired -> delete token
             $this->passwordResetRepo->deleteByEmail($reset->email);
-            return false;
+            return ApiResponse::error(__('auth.token_expired'));
         }
 
         $user = $this->userRepo->findByEmail($reset->email);
         if (!$user) {
-            return false;
+            return ApiResponse::error(__('auth.user_not_found'));
         }
 
         $this->userRepo->updatePassword(
@@ -217,6 +228,6 @@ class AuthService
 
         $this->passwordResetRepo->deleteByEmail($reset->email);
 
-        return true;
+        return ApiResponse::success([], __('auth.password_reset_success'));
     }
 }

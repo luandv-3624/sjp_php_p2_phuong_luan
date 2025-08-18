@@ -34,7 +34,6 @@ class AuthController extends Controller
             'refresh_token' => 'required|string',
         ]);
         return $this->authService->refreshToken($request->input('refresh_token'));
-
     }
 
     public function logout(Request $request)
@@ -72,11 +71,7 @@ class AuthController extends Controller
             'email' => 'required|email|exists:users,email'
         ]);
 
-        $success = $this->authService->requestPasswordReset($data['email']);
-
-        return $success
-            ? ApiResponse::success([], __('auth.reset_password_email_sent'))
-            : ApiResponse::error(__('auth.reset_password_failed'));
+        return $this->authService->requestPasswordReset($data['email']);
 
     }
 
@@ -88,11 +83,6 @@ class AuthController extends Controller
             'password' => 'required|min:6|confirmed',
         ]);
 
-        $success = $this->authService->resetPassword($data['email'], $data['token'], $data['password']);
-
-        return $success
-            ? ApiResponse::success([], __('auth.password_reset_success'))
-            : ApiResponse::error(__('auth.reset_password_invalid_token'));
-
+        return $this->authService->resetPassword($data['email'], $data['token'], $data['password']);
     }
 }
