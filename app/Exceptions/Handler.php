@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
+use App\Helpers\ApiResponse;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -38,4 +40,10 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    protected function invalidJson($request, ValidationException $exception)
+    {
+        return ApiResponse::error($exception->getMessage(), $exception->errors(), $exception->status);
+    }
+
 }

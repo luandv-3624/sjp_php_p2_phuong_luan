@@ -22,7 +22,7 @@ class ApiResponse
         return response()->json([
             'status' => false,
             'statusCode' => $code,
-            'message' => $message ?? __('success'),
+            'message' => $message ?? __('error'),
             'errors' => $errors,
         ], $code);
     }

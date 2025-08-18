@@ -14,6 +14,11 @@ class CheckAccessTokenExpiry
     public function handle(Request $request, Closure $next)
     {
         $token = $request->bearerToken();
+
+        if (!$token) {
+            return ApiResponse::error(__('auth.missing_token'), [], HttpStatusCode::UNAUTHORIZED);
+        }
+
         $accessToken = PersonalAccessToken::findToken($token);
 
         if (
