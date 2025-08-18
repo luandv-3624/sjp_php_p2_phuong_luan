@@ -8,6 +8,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use App\Enums\HttpStatusCode;
+use App\Enums\Role;
 use App\Helpers\ApiResponse;
 use App\Mail\VerifyEmail;
 use Carbon\Carbon;
@@ -91,12 +92,17 @@ class AuthService
             return ApiResponse::error(__('auth.email_already_exists'), [], HttpStatusCode::BAD_REQUEST);
         }
 
+        $role = $this->userRepo->getRoleByName(ROLE::USER);
+        if (!$role) {
+            return ApiResponse::error(__('auth.role_not_found'), [], HttpStatusCode::BAD_REQUEST);
+        }
+
         $user = $this->userRepo->create([
             'name'     => $data['name'],
             'email'    => $data['email'],
             'phone_number' => $data['phone_number'],
             'password' => Hash::make($data['password']),
-            'role_id'  => $data['role_id'],
+            'role_id'  => $role->id,
         ]);
 
         $token = Str::random(64);

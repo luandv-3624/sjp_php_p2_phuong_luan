@@ -28,4 +28,5 @@ return [
     'verify_link_expired'        => 'Verification link has expired. Please request a new one.',
     'resend_verification_success' => 'A new verification link has been sent to your email.',
     'user_not_found_or_verified' => 'User not found or already verified.',
+    'role_not_found'            => 'Role not found.',
 ];

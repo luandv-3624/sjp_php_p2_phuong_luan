@@ -28,4 +28,5 @@ return [
     'verify_link_expired'        => 'Liên kết xác minh đã hết hạn. Vui lòng yêu cầu liên kết mới.',
     'resend_verification_success' => 'Liên kết xác minh mới đã được gửi đến email của bạn.',
     'user_not_found_or_verified' => 'Không tìm thấy người dùng hoặc tài khoản đã được xác minh.',
+    'role_not_found'            => 'Không tìm thấy vai trò.',
 ];

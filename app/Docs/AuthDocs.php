@@ -92,6 +92,67 @@ use OpenApi\Annotations as OA;
  *         description="Không có quyền hoặc token không hợp lệ"
  *     )
  * )
+ *
+ * Signup
+ *
+ * @OA\Post(
+ *     path="/api/auth/signup",
+ *     tags={"Auth"},
+ *     summary="Đăng ký tài khoản mới",
+ *     description="Tạo tài khoản người dùng mới, sau đó hệ thống sẽ gửi email xác minh.",
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"name", "email", "password", "role_id"},
+ *             @OA\Property(property="name", type="string", example="Nguyen Van A"),
+ *             @OA\Property(property="email", type="string", format="email", example="user@example.com"),
+ *             @OA\Property(property="phone_number", type="string", example="0987654321"),
+ *             @OA\Property(property="password", type="string", format="password", example="123456"),
+ *             @OA\Property(property="role_id", type="integer", example=2)
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=201,
+ *         description="Đăng ký thành công, vui lòng kiểm tra email để xác minh",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="user", type="object",
+ *                 @OA\Property(property="id", type="integer", example=10),
+ *                 @OA\Property(property="name", type="string", example="Nguyen Van A"),
+ *                 @OA\Property(property="email", type="string", example="user@example.com"),
+ *                 @OA\Property(property="phone_number", type="string", example="0987654321"),
+ *                 @OA\Property(property="role_id", type="integer", example=2)
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Email đã tồn tại hoặc dữ liệu không hợp lệ"
+ *     )
+ * )
+ *
+ * Verify account
+ *
+ * @OA\Get(
+ *     path="/api/auth/verify/{id}",
+ *     tags={"Auth"},
+ *     summary="Xác minh tài khoản",
+ *     description="Xác minh tài khoản sau khi người dùng nhấn vào link xác minh trong email.",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="ID của user cần xác minh",
+ *         @OA\Schema(type="integer", example=10)
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Xác minh thành công"
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Xác minh thất bại"
+ *     )
+ * )
  */
 class AuthDocs
 {

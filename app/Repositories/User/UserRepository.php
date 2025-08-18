@@ -3,6 +3,7 @@
 namespace App\Repositories\User;
 
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Support\Facades\Log;
 use App\Enums\AccountStatus;
 
@@ -45,6 +46,19 @@ class UserRepository implements UserRepositoryInterface
             Log::error('User verification failed: '.$e->getMessage(), [
                 'user_id' => $userId,
                 'trace'   => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
+    }
+
+    public function getRoleByName(string $roleName): ?Role
+    {
+        try {
+            return Role::where('name', $roleName)->first();
+        } catch (\Exception $e) {
+            Log::error('Get role by name failed: '.$e->getMessage(), [
+                'role_name' => $roleName,
+                'trace'     => $e->getTraceAsString()
             ]);
             throw $e;
         }
