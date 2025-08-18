@@ -41,7 +41,10 @@ class AuthController extends Controller
     public function refreshToken(Request $request)
     {
         try {
-            return $this->authService->refreshToken($request->bearerToken());
+            $request->validate([
+                'refresh_token' => 'required|string',
+            ]);
+            return $this->authService->refreshToken($request->input('refresh_token'));
         } catch (\Exception $e) {
             Log::error('Refresh token failed: '.$e->getMessage(), [
                 'token' => $request->bearerToken(),
@@ -74,7 +77,6 @@ class AuthController extends Controller
                 'email'    => 'required|email|unique:users,email',
                 'phone_number' => 'nullable|string|max:20|regex:/^[0-9\-\+\(\)\s]*$/',
                 'password' => 'required|min:6',
-                'role_id'  => 'required|exists:roles,id',
             ]);
 
             return $this->authService->signup($data);
