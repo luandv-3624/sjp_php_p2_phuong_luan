@@ -2,10 +2,12 @@
 
 namespace App\Exceptions;
 
+use App\Enums\HttpStatusCode;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use App\Helpers\ApiResponse;
 use Throwable;
+use Illuminate\Support\Facades\Log;
 
 class Handler extends ExceptionHandler
 {
@@ -44,6 +46,29 @@ class Handler extends ExceptionHandler
     protected function invalidJson($request, ValidationException $exception)
     {
         return ApiResponse::error($exception->getMessage(), $exception->errors(), $exception->status);
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof ValidationException) {
+            return ApiResponse::error(
+                'validation_failed',
+                $exception->errors(),
+                $exception->status
+            );
+        }
+
+        if ($exception instanceof \Exception) {
+            Log::error($exception->getMessage(), ['trace' => $exception->getTraceAsString()]);
+
+            return ApiResponse::error(
+                'Internal server error',
+                [],
+                HttpStatusCode::INTERNAL_SERVER_ERROR
+            );
+        }
+
+        return parent::render($request, $exception);
     }
 
 }

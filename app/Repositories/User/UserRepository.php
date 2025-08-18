@@ -2,6 +2,7 @@
 
 namespace App\Repositories\User;
 
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Log;
@@ -63,4 +64,20 @@ class UserRepository implements UserRepositoryInterface
             throw $e;
         }
     }
+
+    public function updatePassword(int $id, string $password): bool
+    {
+        try {
+            return User::where('id', $id)->update([
+                                        'password' => Hash::make($password),
+                    ]);
+        } catch (\Exception $e) {
+            Log::error('Update failed: '.$e->getMessage(), [
+                'id'    => $id,
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
+    }
+
 }

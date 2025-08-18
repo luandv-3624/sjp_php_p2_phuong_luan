@@ -7,6 +7,8 @@ use App\Repositories\Auth\AuthRepositoryInterface;
 use App\Repositories\Auth\AuthRepository;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Repositories\User\UserRepository;
+use App\Repositories\Auth\PasswordResetRepositoryInterface;
+use App\Repositories\Auth\PasswordResetRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -19,6 +21,7 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         $this->app->bind(AuthRepositoryInterface::class, AuthRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(PasswordResetRepositoryInterface::class, PasswordResetRepository::class);
     }
 
     /**
