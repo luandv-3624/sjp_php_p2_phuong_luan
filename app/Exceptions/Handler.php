@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -63,10 +64,16 @@ class Handler extends ExceptionHandler
                     'errors' => $e->errors(),
                 ], Response::HTTP_UNPROCESSABLE_ENTITY),
 
-                $e instanceof NotFoundHttpException => response()->json([
+                $e instanceof ModelNotFoundException => response()->json([
                     'status' => false,
                     'statusCode' => Response::HTTP_NOT_FOUND,
                     'message' => 'Resource not found.',
+                ], Response::HTTP_NOT_FOUND),
+
+                $e instanceof NotFoundHttpException => response()->json([
+                    'status' => false,
+                    'statusCode' => Response::HTTP_NOT_FOUND,
+                    'message' => $e->getMessage(),
                 ], Response::HTTP_NOT_FOUND),
 
                 $e instanceof HttpException => response()->json([
