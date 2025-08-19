@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('phone_number')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('status', ['active', 'deactive', 'verified'])->default('active');
+            $table->enum('status', ['active', 'inactive', 'verified'])->default('active');
             $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
