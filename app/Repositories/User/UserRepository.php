@@ -5,6 +5,7 @@ namespace App\Repositories\User;
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Log;
+use App\Enums\AccountStatus;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -38,7 +39,7 @@ class UserRepository implements UserRepositoryInterface
     {
         try {
             return User::where('id', $userId)->update([
-                'status'            => 'verified',
+                'status'            => AccountStatus::VERIFIED,
                 'email_verified_at' => now(),
             ]) > 0;
         } catch (\Exception $e) {
