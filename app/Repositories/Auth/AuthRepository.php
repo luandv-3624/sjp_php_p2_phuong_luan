@@ -1,0 +1,83 @@
+<?php
+
+namespace App\Repositories\Auth;
+
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Support\Facades\Log;
+
+class AuthRepository implements AuthRepositoryInterface
+{
+    public function attemptLogin(array $credentials): bool
+    {
+        return Auth::attempt($credentials);
+    }
+
+    public function getAuthenticatedUser(): ?User
+    {
+        return Auth::user();
+    }
+
+    public function deleteUserTokens(User $user, string $tokenName): void
+    {
+        try {
+            $user->tokens()->where('name', $tokenName)->delete();
+        } catch (\Exception $e) {
+            Log::error('Delete user tokens failed: '.$e->getMessage(), [
+                'user_id' => $user->id,
+                'token_name' => $tokenName,
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw new $e();
+        }
+    }
+
+    public function createToken(User $user, string $name, array $abilities, Carbon $expiresAt): array
+    {
+        try {
+            $tokenObj = $user->createToken($name, $abilities);
+            $tokenObj->accessToken->expires_at = $expiresAt;
+            $tokenObj->accessToken->save();
+
+            return [
+                'plainTextToken' => $tokenObj->plainTextToken,
+                'expiresAt'      => $expiresAt
+            ];
+        } catch (\Exception $e) {
+            Log::error('Create token failed: '.$e->getMessage(), [
+                'user_id'    => $user->id,
+                'token_name' => $name,
+                'trace'      => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
+    }
+
+    public function findRefreshToken(string $token): ?PersonalAccessToken
+    {
+        try {
+            return PersonalAccessToken::findToken($token);
+        } catch (\Exception $e) {
+            Log::error('Find refresh token failed: '.$e->getMessage(), [
+                'token' => $token,
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
+    }
+
+    public function deleteToken(PersonalAccessToken $token): void
+    {
+        try {
+            $token->delete();
+        } catch (\Exception $e) {
+            Log::error('Delete token failed: '.$e->getMessage(), [
+                'token_id' => $token->id ?? null,
+                'trace'    => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
+    }
+}
