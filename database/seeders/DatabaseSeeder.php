@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             PriceTypeSeeder::class,
+            ProvinceAndWardSeeder::class,
         ]);
     }
 }
