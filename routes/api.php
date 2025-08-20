@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,4 +26,8 @@ Route::prefix('auth')->group(function () {
         ->middleware('throttle:password-reset');
     Route::post('password/reset', [AuthController::class, 'resetPassword']);
     Route::middleware(['auth:sanctum', 'checkAccessTokenExpiry'])->post('logout', [AuthController::class, 'logout'])->name('auth.logout');
+});
+
+Route::prefix('users')->middleware(['auth:sanctum', 'checkAccessTokenExpiry', 'role:admin,moderator'])->group(function () {
+    Route::get('/', [UserController::class, 'index'])->name('users.index');
 });

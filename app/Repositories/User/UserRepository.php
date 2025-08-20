@@ -3,13 +3,18 @@
 namespace App\Repositories\User;
 
 use Illuminate\Support\Facades\Hash;
+use App\Enums\SortOrder;
+use App\Enums\UsersSortBy;
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Log;
 use App\Enums\AccountStatus;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserRepository implements UserRepositoryInterface
 {
+    public const PAGE_SIZE = 10;
+
     public function findByEmail(string $email): ?User
     {
         try {
@@ -80,4 +85,30 @@ class UserRepository implements UserRepositoryInterface
         }
     }
 
+    public function findAll(array $filter, ?int $pageSize): LengthAwarePaginator
+    {
+        try {
+            $sortBy = UsersSortBy::tryFrom($filter['sortBy'] ?? null) ?? UsersSortBy::NAME;
+            $sortOrder = SortOrder::tryFrom($filter['sortOrder'] ?? null) ?? SortOrder::ASC;
+            $search = $filter['search'] ?? null;
+            $perPage = $pageSize ?? self::PAGE_SIZE;
+
+            $users = User::with('role')
+                ->when($search, function ($query, $search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%");
+                    });
+                })
+                ->orderBy($sortBy->value, $sortOrder->value)
+                ->paginate($perPage);
+
+            return $users;
+        } catch (\Exception $e) {
+            Log::error('Fetch all users failed: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
+    }
 }
