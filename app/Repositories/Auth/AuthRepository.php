@@ -2,9 +2,11 @@
 
 namespace App\Repositories\Auth;
 
+use App\Enums\AccountStatus;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Support\Facades\Log;
 
@@ -12,7 +14,14 @@ class AuthRepository implements AuthRepositoryInterface
 {
     public function attemptLogin(array $credentials): bool
     {
-        return Auth::attempt($credentials);
+        if (Auth::attempt($credentials)) {
+            $user = User::where('email', $credentials['email'])->first();
+            if ($user && $user->status !== AccountStatus::INACTIVE->value) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function getAuthenticatedUser(): ?User

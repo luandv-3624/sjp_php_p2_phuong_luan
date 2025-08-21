@@ -30,4 +30,6 @@ Route::prefix('auth')->group(function () {
 
 Route::prefix('users')->middleware(['auth:sanctum', 'checkAccessTokenExpiry', 'role:admin,moderator'])->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('users.index');
+    Route::put('/{user}', [UserController::class, 'update'])->name('users.update')->middleware(['role:admin'])->can('update', 'user');
+    Route::put('/{user}/status', [UserController::class, 'updateStatus'])->name('users.update-status')->can('update', 'user');
 });

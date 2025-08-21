@@ -9,7 +9,9 @@ use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Log;
 use App\Enums\AccountStatus;
+use App\Enums\Role as EnumsRole;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -110,5 +112,93 @@ class UserRepository implements UserRepositoryInterface
             ]);
             throw $e;
         }
+    }
+
+    private function updateUserStatus(User $user, string $status): User
+    {
+        try {
+            $validStatus = AccountStatus::from($status);
+
+            switch ($validStatus) {
+                case AccountStatus::ACTIVE: {
+                    if ($user->status === AccountStatus::ACTIVE->value) {
+                        throw new ConflictHttpException(__('users.already_active'));
+                    }
+
+                    $user->status = AccountStatus::ACTIVE->value;
+                    $user->save();
+
+                    break;
+                }
+                case AccountStatus::INACTIVE: {
+                    if ($user->status === AccountStatus::INACTIVE->value) {
+                        throw new ConflictHttpException(__('users.already_inactive'));
+                    }
+
+                    $user->status = AccountStatus::INACTIVE->value;
+                    $user->tokens()->delete();
+                    $user->save();
+
+                    break;
+                }
+                case AccountStatus::VERIFIED: {
+                    if (isset($user->email_verified_at)) {
+                        throw new ConflictHttpException(__('users.already_verified'));
+                    }
+
+                    $user->email_verified_at = now();
+                    $user->save();
+
+                    break;
+                }
+            }
+
+            return $user;
+        } catch (\Exception $e) {
+            Log::error('Update status failed: ' . $e->getMessage(), [
+                'id' => $user->id,
+                'status' => $status,
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
+    }
+
+    private function updateUserRole(User $user, int $roleId): User
+    {
+        try {
+            if ($user->role->name === EnumsRole::ADMIN) {
+                throw new ConflictHttpException(__('users.cannot_change_admin_role'));
+            }
+
+            $role = Role::findOrFail($roleId);
+
+            $user->role()->associate($role);
+            $user->save();
+
+            return $user;
+        } catch (\Exception $e) {
+            Log::error('Update role failed: ' . $e->getMessage(), [
+                'id' => $user->id,
+                'roleId' => $roleId,
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
+    }
+
+    public function updateOne(int $id, array $data): User
+    {
+        $user = User::with('role')->findOrFail($id);
+
+        if (isset($data['status'])) {
+            $user = $this->updateUserStatus($user, $data['status']);
+        }
+
+        if (isset($data['role_id'])) {
+            $user = $this->updateUserRole($user, $data['role_id']);
+        }
+
+        return $user;
     }
 }
