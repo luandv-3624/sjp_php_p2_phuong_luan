@@ -6,7 +6,7 @@ class Role
 {
     public const USER = 'user';
 
-    public const MONDERATOR = 'monderator';
+    public const MODERATOR = 'moderator';
 
     public const ADMIN = 'admin';
 }

@@ -11,4 +11,5 @@ interface UserRepositoryInterface
     public function create(array $data): User;
     public function verifyUser(int $userId): bool;
     public function getRoleByName(string $roleName): ?Role;
+    public function updatePassword(int $id, string $password): bool;
 }

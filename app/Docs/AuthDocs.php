@@ -153,6 +153,57 @@ use OpenApi\Annotations as OA;
  *         description="Xác minh thất bại"
  *     )
  * )
+ *
+ * Forgot Password
+ *
+ * @OA\Post(
+ *     path="/api/auth/password/forgot-password",
+ *     tags={"Auth"},
+ *     summary="Yêu cầu đặt lại mật khẩu",
+ *     description="Người dùng nhập email, hệ thống sẽ gửi mail chứa link reset password kèm token.",
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"email"},
+ *             @OA\Property(property="email", type="string", format="email", example="user@example.com")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Gửi email reset password thành công"
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Gửi email thất bại hoặc request quá nhanh"
+ *     )
+ * )
+ *
+ * Reset Password
+ *
+ * @OA\Post(
+ *     path="/api/auth/password/reset",
+ *     tags={"Auth"},
+ *     summary="Đặt lại mật khẩu bằng email và token",
+ *     description="Người dùng nhận link qua email (chứa email & token). Sau đó gửi request kèm mật khẩu mới.",
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"email", "token", "password", "password_confirmation"},
+ *             @OA\Property(property="email", type="string", format="email", example="user@example.com"),
+ *             @OA\Property(property="token", type="string", example="nwWKVHuGaweC9GQZp5YThd7IYsovSdg2bpbMt8dwT7qECrMKa1Qd8wJPiroB8zSI"),
+ *             @OA\Property(property="password", type="string", format="password", example="newPassword123"),
+ *             @OA\Property(property="password_confirmation", type="string", format="password", example="newPassword123")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Đổi mật khẩu thành công"
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Token không hợp lệ hoặc đã hết hạn"
+ *     )
+ * )
  */
 class AuthDocs
 {
