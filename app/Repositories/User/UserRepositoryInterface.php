@@ -14,4 +14,5 @@ interface UserRepositoryInterface
     public function getRoleByName(string $roleName): ?Role;
     public function updatePassword(int $id, string $password): bool;
     public function findAll(array $filter, ?int $pageSize): LengthAwarePaginator;
+    public function updateOne(int $id, array $data): User;
 }

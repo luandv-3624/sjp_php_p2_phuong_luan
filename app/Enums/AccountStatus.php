@@ -2,9 +2,14 @@
 
 namespace App\Enums;
 
-class AccountStatus
+enum AccountStatus: string
 {
-    public const ACTIVE = 'active';
-    public const INACTIVE = 'inactive';
-    public const VERIFIED = 'verified';
+    case ACTIVE = 'active';
+    case INACTIVE = 'inactive';
+    case VERIFIED = 'verified';
+
+    public static function values(): array
+    {
+        return array_map(fn($s) => $s->value, self::cases());
+    }
 }

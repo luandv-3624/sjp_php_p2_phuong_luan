@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -87,6 +88,12 @@ class Handler extends ExceptionHandler
                     'statusCode' => Response::HTTP_NOT_FOUND,
                     'message' => 'Route not found.',
                 ], Response::HTTP_NOT_FOUND),
+
+                $e instanceof AuthorizationException => response()->json([
+                    'status' => false,
+                    'statusCode' => Response::HTTP_FORBIDDEN,
+                    'message' => 'Unauthorized Request.',
+                ], Response::HTTP_FORBIDDEN),
 
                 default => response()->json([
                     'status' => false,
