@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Venue\VenueController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,4 +31,17 @@ Route::prefix('auth')->group(function () {
 
 Route::prefix('users')->middleware(['auth:sanctum', 'checkAccessTokenExpiry', 'role:admin,moderator'])->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('users.index');
+});
+
+Route::middleware(['auth:sanctum', 'checkAccessTokenExpiry'])->group(function () {
+    Route::prefix('venues')->group(function () {
+        Route::post('/', [VenueController::class, 'store']);
+        Route::put('/{venue}', [VenueController::class, 'update']);
+        Route::delete('/{venue}', [VenueController::class, 'destroy']);
+        Route::get('/{venue}', [VenueController::class, 'show']);
+        Route::post('/{venue}/managers', [VenueController::class, 'addManager']);
+
+        Route::put('/{venue}/status', [VenueController::class, 'updateStatusVenue'])
+                ->middleware('role:admin,moderator');
+    });
 });
