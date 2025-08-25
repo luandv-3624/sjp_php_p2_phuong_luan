@@ -204,6 +204,95 @@ use OpenApi\Annotations as OA;
  *         description="Token không hợp lệ hoặc đã hết hạn"
  *     )
  * )
+ *
+ * Get Profile
+ *
+ * @OA\Get(
+ *     path="/api/profile",
+ *     tags={"Profile"},
+ *     summary="Xem thông tin hồ sơ người dùng",
+ *     description="Lấy thông tin hồ sơ của người dùng hiện tại dựa trên access token.",
+ *     security={{"bearerAuth":{}}},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Thành công",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=true),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="id", type="integer", example=1),
+ *                 @OA\Property(property="name", type="string", example="John Doe"),
+ *                 @OA\Property(property="email", type="string", example="john@example.com"),
+ *                 @OA\Property(property="phone_number", type="string", example="+84912345678"),
+ *                 @OA\Property(property="email_verified_at", type="string", format="date-time", example="2024-01-01 12:00:00"),
+ *                 @OA\Property(property="status", type="string", example="active"),
+ *                 @OA\Property(property="role", type="object",
+ *                     @OA\Property(property="id", type="integer", example=2),
+ *                     @OA\Property(property="name", type="string", example="user")
+ *                 ),
+ *                 @OA\Property(property="created_at", type="string", format="date-time", example="2024-01-01 10:00:00"),
+ *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2024-02-01 09:00:00")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Không xác thực (unauthenticated)"
+ *     )
+ * )
+ *
+ * Update Profile
+ *
+ * @OA\Put(
+ *     path="/api/profile",
+ *     tags={"Profile"},
+ *     summary="Cập nhật hồ sơ người dùng",
+ *     description="Cập nhật thông tin hồ sơ của người dùng hiện tại. Các trường được phép: name, phone_number.",
+ *     security={{"bearerAuth":{}}},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="name", type="string", example="Jane Doe"),
+ *             @OA\Property(property="phone_number", type="string", example="+84987654321")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Cập nhật thành công",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=true),
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="id", type="integer", example=1),
+ *                 @OA\Property(property="name", type="string", example="Jane Doe"),
+ *                 @OA\Property(property="email", type="string", example="john@example.com"),
+ *                 @OA\Property(property="phone_number", type="string", example="+84987654321"),
+ *                 @OA\Property(property="email_verified_at", type="string", format="date-time", example="2024-01-01 12:00:00"),
+ *                 @OA\Property(property="status", type="string", example="active"),
+ *                 @OA\Property(property="role", type="object",
+ *                     @OA\Property(property="id", type="integer", example=2),
+ *                     @OA\Property(property="name", type="string", example="user")
+ *                 ),
+ *                 @OA\Property(property="created_at", type="string", format="date-time", example="2024-01-01 10:00:00"),
+ *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2024-02-15 08:00:00")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Dữ liệu không hợp lệ",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+ *             @OA\Property(property="errors", type="object",
+ *                 @OA\Property(property="phone_number", type="array",
+ *                     @OA\Items(type="string", example="The phone number format is invalid.")
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Không xác thực (unauthenticated)"
+ *     )
+ * )
  */
 class AuthDocs
 {

@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AuthRepository implements AuthRepositoryInterface
 {
@@ -79,5 +80,37 @@ class AuthRepository implements AuthRepositoryInterface
             ]);
             throw $e;
         }
+    }
+
+    public function findOne(int $id): User
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            throw new NotFoundHttpException(__('auth.user_not_found'));
+        }
+
+        return $user;
+    }
+    public function updateOne(int $id, array $data): User
+    {
+        $user = $this->findOne($id);
+
+        $fields = [
+            'name',
+            'phone_number'
+        ];
+
+        $updateData = [];
+
+        foreach ($fields as $field) {
+            if (isset($data[$field])) {
+                $updateData[$field] = $data[$field];
+            }
+        }
+
+        $user->update($updateData);
+
+        return $user;
     }
 }

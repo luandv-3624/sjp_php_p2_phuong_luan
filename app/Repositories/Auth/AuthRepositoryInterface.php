@@ -14,4 +14,6 @@ interface AuthRepositoryInterface
     public function createToken(User $user, string $name, array $abilities, Carbon $expiresAt): array;
     public function findRefreshToken(string $token): ?PersonalAccessToken;
     public function deleteToken(PersonalAccessToken $token): void;
+    public function findOne(int $id): User;
+    public function updateOne(int $id, array $data): User;
 }

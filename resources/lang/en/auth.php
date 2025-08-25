@@ -40,4 +40,5 @@ return [
     'reset_password_request_too_soon' => 'You can only request password reset once per minute.',
     'invalid_token' => 'Invalid or incorrect reset token.',
     'reset_password_failed_send_mail' => 'We could not send the reset password email. Please try again later.',
+    'user_updated' => 'Your information updated successfully.'
 ];
