@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Venue\VenueController;
+use App\Http\Controllers\Amenity\AmenityController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,5 +44,13 @@ Route::middleware(['auth:sanctum', 'checkAccessTokenExpiry'])->group(function ()
 
         Route::put('/{venue}/status', [VenueController::class, 'updateStatusVenue'])
                 ->middleware('role:admin,moderator');
+        Route::get('/{venue}/amenities', [AmenityController::class, 'listByVenue']);
+    });
+
+    Route::prefix('amenities')->group(function () {
+        Route::post('/', [AmenityController::class, 'store']);
+        Route::put('/{amenity}', [AmenityController::class, 'update']);
+        Route::delete('/{amenity}', [AmenityController::class, 'destroy']);
+        Route::get('/{amenity}', [AmenityController::class, 'show']);
     });
 });
