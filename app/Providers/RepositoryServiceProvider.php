@@ -13,6 +13,8 @@ use App\Services\User\UserServiceInterface;
 use App\Services\User\UserService;
 use App\Repositories\Venue\VenueRepositoryInterface;
 use App\Repositories\Venue\VenueRepository;
+use App\Repositories\Amenity\AmenityRepositoryInterface;
+use App\Repositories\Amenity\AmenityRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -28,6 +30,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(PasswordResetRepositoryInterface::class, PasswordResetRepository::class);
         $this->app->bind(UserServiceInterface::class, UserService::class);
         $this->app->bind(VenueRepositoryInterface::class, VenueRepository::class);
+        $this->app->bind(AmenityRepositoryInterface::class, AmenityRepository::class);
     }
 
     /**
