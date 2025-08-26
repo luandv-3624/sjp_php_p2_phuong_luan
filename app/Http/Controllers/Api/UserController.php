@@ -15,13 +15,6 @@ class UserController extends BaseApiController
 
     public function __construct(private UserServiceInterface $userService) {}
 
-    public function currentUser(Request $request)
-    {
-        return response()->json([
-            'data' => $request->user(),
-        ], 200);
-    }
-
     public function index(IndexRequest $request): JsonResponse
     {
         $query = $request->validated();
