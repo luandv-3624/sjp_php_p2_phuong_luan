@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Enums\HttpStatusCode;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\UpdateProfileRequest;
 use Illuminate\Http\Request;
 use App\Services\Auth\AuthService;
-use App\Helpers\ApiResponse;
-use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AuthController extends Controller
 {
@@ -84,5 +83,19 @@ class AuthController extends Controller
         ]);
 
         return $this->authService->resetPassword($data['email'], $data['token'], $data['password']);
+    }
+
+    public function showProfile(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        return $this->authService->findOne($user->id);
+    }
+
+    public function updateProfile(UpdateProfileRequest $request): JsonResponse
+    {
+        $user = $request->user();
+
+        return $this->authService->updateOne($user->id, $request->validated());
     }
 }

@@ -55,4 +55,9 @@ Route::middleware(['auth:sanctum', 'checkAccessTokenExpiry'])->group(function ()
         Route::delete('/{amenity}', [AmenityController::class, 'destroy']);
         Route::get('/{amenity}', [AmenityController::class, 'show']);
     });
+
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [AuthController::class, 'showProfile']);
+        Route::put('/', [AuthController::class, 'updateProfile']);
+    });
 });

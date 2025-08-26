@@ -2,9 +2,11 @@
 
 namespace App\Services\Auth;
 
+use App\Http\Resources\User\UserResource;
 use App\Repositories\Auth\PasswordResetRepositoryInterface;
 use App\Repositories\Auth\AuthRepositoryInterface;
 use App\Repositories\User\UserRepositoryInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
@@ -229,5 +231,15 @@ class AuthService
         $this->passwordResetRepo->deleteByEmail($reset->email);
 
         return ApiResponse::success([], __('auth.password_reset_success'));
+    }
+
+    public function findOne(int $id): JsonResponse
+    {
+        return ApiResponse::success(new UserResource($this->authRepo->findOne($id)));
+    }
+
+    public function updateOne(int $id, array $data): JsonResponse
+    {
+        return ApiResponse::success(new UserResource($this->authRepo->updateOne($id, $data)), __('auth.user_updated'));
     }
 }
