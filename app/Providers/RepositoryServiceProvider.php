@@ -23,6 +23,10 @@ use App\Services\Space\SpaceService;
 use App\Services\Space\SpaceServiceInterface;
 use App\Services\Booking\BookingService;
 use App\Services\Booking\BookingServiceInterface;
+use App\Repositories\Payment\PaymentRepositoryInterface;
+use App\Repositories\Payment\PaymentRepository;
+use App\Services\Payment\PaymentServiceInterface;
+use App\Services\Payment\PaymentService;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -43,6 +47,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(SpaceServiceInterface::class, SpaceService::class);
         $this->app->bind(BookingRepositoryInterface::class, BookingRepository::class);
         $this->app->bind(BookingServiceInterface::class, BookingService::class);
+        $this->app->bind(PaymentRepositoryInterface::class, PaymentRepository::class);
+        $this->app->bind(PaymentServiceInterface::class, PaymentService::class);
     }
 
     /**

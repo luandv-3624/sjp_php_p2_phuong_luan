@@ -2,11 +2,10 @@
 
 namespace App\Enums;
 
-enum BookingPaymentStatus: string
+enum PaymentMethod: string
 {
-    case UNPAID = 'unpaid';
-    case PARTIAL = 'partial';
-    case PAID = 'paid';
+    case MOMO = 'momo';
+    case VNPAY = 'vnpay';
 
     public static function values(): array
     {

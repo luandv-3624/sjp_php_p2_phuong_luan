@@ -2,11 +2,11 @@
 
 namespace App\Enums;
 
-enum BookingPaymentStatus: string
+enum PaymentStatus: string
 {
-    case UNPAID = 'unpaid';
-    case PARTIAL = 'partial';
-    case PAID = 'paid';
+    case SUCCESS = 'success';
+    case FAILED = 'failed';
+    case REFUNDED = 'refunded';
 
     public static function values(): array
     {
