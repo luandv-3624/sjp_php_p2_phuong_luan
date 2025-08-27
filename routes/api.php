@@ -59,6 +59,7 @@ Route::middleware(['auth:sanctum', 'checkAccessTokenExpiry'])->group(function ()
         Route::put('/{space}', [SpaceController::class, 'update'])
             ->can('update', 'space');
         Route::get('/{space}', [SpaceController::class, 'show']);
+        Route::get('/', [SpaceController::class, 'index']);
     });
 
     Route::prefix('amenities')->group(function () {

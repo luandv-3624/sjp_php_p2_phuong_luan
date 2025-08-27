@@ -3,6 +3,7 @@
 namespace App\Services\Space;
 
 use App\Helpers\ApiResponse;
+use App\Http\Resources\Space\SpaceCollection;
 use App\Http\Resources\Space\SpaceResource;
 use App\Repositories\Space\SpaceRepositoryInterface;
 use Illuminate\Http\JsonResponse;
@@ -30,5 +31,10 @@ class SpaceService implements SpaceServiceInterface
     public function findAllByVenue(int $venueId): JsonResponse
     {
         return ApiResponse::success(SpaceResource::collection($this->spaceRepo->findAllByVenue($venueId)));
+    }
+
+    public function findAll(array $filters, ?int $pageSize): JsonResponse
+    {
+        return ApiResponse::success(new SpaceCollection($this->spaceRepo->findAll($filters, $pageSize)));
     }
 }
