@@ -11,6 +11,8 @@ use App\Repositories\Auth\PasswordResetRepositoryInterface;
 use App\Repositories\Auth\PasswordResetRepository;
 use App\Repositories\Space\SpaceRepository;
 use App\Repositories\Space\SpaceRepositoryInterface;
+use App\Repositories\Booking\BookingRepository;
+use App\Repositories\Booking\BookingRepositoryInterface;
 use App\Services\User\UserServiceInterface;
 use App\Services\User\UserService;
 use App\Repositories\Venue\VenueRepositoryInterface;
@@ -19,6 +21,8 @@ use App\Repositories\Amenity\AmenityRepositoryInterface;
 use App\Repositories\Amenity\AmenityRepository;
 use App\Services\Space\SpaceService;
 use App\Services\Space\SpaceServiceInterface;
+use App\Services\Booking\BookingService;
+use App\Services\Booking\BookingServiceInterface;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -37,6 +41,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(AmenityRepositoryInterface::class, AmenityRepository::class);
         $this->app->bind(SpaceRepositoryInterface::class, SpaceRepository::class);
         $this->app->bind(SpaceServiceInterface::class, SpaceService::class);
+        $this->app->bind(BookingRepositoryInterface::class, BookingRepository::class);
+        $this->app->bind(BookingServiceInterface::class, BookingService::class);
     }
 
     /**
