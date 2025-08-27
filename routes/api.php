@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\SpaceController;
+use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Venue\VenueController;
@@ -70,5 +71,11 @@ Route::middleware(['auth:sanctum', 'checkAccessTokenExpiry'])->group(function ()
     Route::prefix('profile')->group(function () {
         Route::get('/', [AuthController::class, 'showProfile']);
         Route::put('/', [AuthController::class, 'updateProfile']);
+    });
+
+    Route::prefix('bookings')->group(function() {
+        Route::post('/', [BookingController::class, 'store']);
+        Route::get('/', [BookingController::class, 'index'])->middleware('role:admin,moderator');
+        Route::get('/{booking}', [BookingController::class, 'show'])->can('view', 'booking');
     });
 });
