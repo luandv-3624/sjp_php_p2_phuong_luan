@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\SpaceController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Venue\VenueController;
@@ -21,7 +22,7 @@ Route::prefix('auth')->group(function () {
     Route::post('signup', [AuthController::class, 'signup'])->name('auth.signup');
     Route::get('verify', [AuthController::class, 'verify'])->name('auth.verify');
     Route::post('resend-verification', [AuthController::class, 'resendVerification'])
-            ->middleware('throttle:resend-verification')->name('auth.resend');
+        ->middleware('throttle:resend-verification')->name('auth.resend');
     Route::post('login', [AuthController::class, 'login'])->name('auth.login');
     Route::post('refresh-token', [AuthController::class, 'refreshToken'])->name('auth.refresh');
     Route::post('password/forgot-password', [AuthController::class, 'requestPasswordReset'])
@@ -47,6 +48,16 @@ Route::middleware(['auth:sanctum', 'checkAccessTokenExpiry'])->group(function ()
         Route::put('/{venue}/status', [VenueController::class, 'updateStatusVenue'])
                 ->middleware('role:admin,moderator');
         Route::get('/{venue}/amenities', [AmenityController::class, 'listByVenue']);
+
+        Route::post('/{venue}/spaces', [SpaceController::class, 'store'])
+            ->can('createSpace', 'venue');
+        Route::get('/{venue}/spaces', [SpaceController::class, 'indexByVenue']);
+    });
+
+    Route::prefix('spaces')->group(function () {
+        Route::put('/{space}', [SpaceController::class, 'update'])
+            ->can('update', 'space');
+        Route::get('/{space}', [SpaceController::class, 'show']);
     });
 
     Route::prefix('amenities')->group(function () {

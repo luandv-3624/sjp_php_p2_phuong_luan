@@ -26,4 +26,9 @@ class VenuePolicy
     {
         return $this->isOwner($user, $venue);
     }
+
+    public function createSpace(User $user, Venue $venue): bool
+    {
+        return $this->isOwner($user, $venue);
+    }
 }
