@@ -15,6 +15,6 @@ enum BookingStatus: string
 
     public static function values(): array
     {
-        return array_map(fn($s) => $s->value, self::cases());
+        return array_map(fn ($s) => $s->value, self::cases());
     }
 }
