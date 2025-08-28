@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Space;
 
+use App\Http\Resources\Venue\VenueResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SpaceResource extends JsonResource
@@ -17,6 +18,7 @@ class SpaceResource extends JsonResource
         return [
             'id' => $this->id,
             'venue_id' => $this->venue_id,
+            'venue' => new VenueResource($this->whenLoaded('venue')),
             'name' => $this->name,
             'space_type' => new SpaceTypeResource($this->whenLoaded('type')),
             'capacity' => $this->capacity,
