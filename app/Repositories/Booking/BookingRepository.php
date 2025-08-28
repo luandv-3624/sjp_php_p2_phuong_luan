@@ -8,6 +8,7 @@ use App\Enums\BookingStatus;
 use App\Enums\PriceType;
 use App\Enums\SortOrder;
 use App\Enums\SpaceStatus;
+use App\Enums\VenueStatus;
 use App\Models\Booking;
 use App\Models\Space;
 use Carbon\Carbon;
@@ -24,9 +25,13 @@ class BookingRepository implements BookingRepositoryInterface
     public function create(array $data): Booking
     {
         return DB::transaction(function () use ($data) {
-            $space = Space::with('priceType')->find($data['space_id']);
+            $space = Space::with('venue', 'priceType')->find($data['space_id']);
             if (!$space) {
                 throw new NotFoundHttpException(__('booking.space_not_found'));
+            }
+
+            if ($space->venue->status !== VenueStatus::APPROVED->value) {
+                throw new ConflictHttpException(__('booking.venue_not_approved'));
             }
 
             if ($space->status === SpaceStatus::UNAVAILABLE->value) {
@@ -55,6 +60,8 @@ class BookingRepository implements BookingRepositoryInterface
                 'start_time' => $startTime,
                 'end_time' => $endTime,
                 'total_price' => $totalPrice,
+                'status' => BookingStatus::PENDING->value,
+                'status_payment' => BookingPaymentStatus::UNPAID->value,
             ]);
 
             $booking->load('user', 'space');
@@ -109,7 +116,7 @@ class BookingRepository implements BookingRepositoryInterface
 
     public function findById(int $id): Booking
     {
-        $booking = Booking::with('user', 'space')->find($id);
+        $booking = Booking::with('user', 'space', 'payments')->find($id);
 
         if (!$booking) {
             throw new NotFoundHttpException(__('booking.booking_not_found'));

@@ -7,4 +7,5 @@ return [
     'space_already_booked' => 'The space is already booked for the selected time period.',
     'create_success' => 'Booking created successfully.',
     'booking_not_found' => 'The requested booking could not be found.',
+    'venue_not_approved' => 'The venue has not been approved yet.',
 ];
