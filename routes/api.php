@@ -83,6 +83,7 @@ Route::middleware(['auth:sanctum', 'checkAccessTokenExpiry'])->group(function ()
         Route::get('/', [BookingController::class, 'index'])->middleware('role:admin,moderator');
         Route::get('/me', [BookingController::class, 'indexByUser']);
         Route::get('/{booking}', [BookingController::class, 'show'])->can('view', 'booking');
+        Route::put('/{booking}/status', [BookingController::class, 'updateStatus']);
     });
 
     Route::prefix('payment')->group(function () {

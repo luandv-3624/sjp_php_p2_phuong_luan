@@ -146,7 +146,7 @@ class PaymentService implements PaymentServiceInterface
                 }
 
                 $paidAt = !empty($data['responseTime'])
-                ? Carbon::createFromTimestampMs((int)$data['responseTime'])
+                ? Carbon::createFromTimestamp((int)$data['responseTime'] / 1000)
                 : Carbon::now();
 
                 $this->paymentRepo->createPayment([

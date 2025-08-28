@@ -8,10 +8,13 @@ use App\Http\Requests\Booking\IndexRequest;
 use App\Http\Requests\Booking\StoreRequest;
 use App\Models\Booking;
 use App\Services\Booking\BookingServiceInterface;
+use App\Http\Requests\Booking\UpdateBookingStatusRequest;
 
 class BookingController extends Controller
 {
-    public function __construct(private BookingServiceInterface $bookingService) {}
+    public function __construct(private BookingServiceInterface $bookingService)
+    {
+    }
 
     public function store(StoreRequest $request)
     {
@@ -44,5 +47,12 @@ class BookingController extends Controller
             [...$query, 'userId' => $user->id],
             $query['pageSize'] ?? null
         );
+    }
+
+    public function updateStatus(UpdateBookingStatusRequest $request, Booking $booking)
+    {
+        $data = $request->validated();
+
+        return $this->bookingService->updateStatus($booking, $data['status']);
     }
 }

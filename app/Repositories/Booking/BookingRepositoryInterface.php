@@ -12,4 +12,5 @@ interface BookingRepositoryInterface
     public function findAll(array $filters, ?int $pageSize): LengthAwarePaginator;
     public function findBookingForUpdate(int $id): ?Booking;
     public function updateBookingPaymentStatus(Booking $booking, array $bookingUpdateData): Booking;
+    public function updateStatus(Booking $booking, string $status): Booking;
 }
