@@ -78,6 +78,7 @@ Route::middleware(['auth:sanctum', 'checkAccessTokenExpiry'])->group(function ()
         Route::post('/', [BookingController::class, 'store']);
         Route::get('/', [BookingController::class, 'index'])->middleware('role:admin,moderator');
         Route::get('/{booking}', [BookingController::class, 'show'])->can('view', 'booking');
+        Route::put('/{booking}/status', [BookingController::class, 'updateStatus']);
     });
 
     Route::prefix('payment')->group(function () {

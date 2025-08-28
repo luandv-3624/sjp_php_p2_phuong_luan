@@ -167,5 +167,53 @@ use OpenApi\Annotations as OA;
  *     @OA\Property(property="created_at", type="string", format="date-time"),
  *     @OA\Property(property="updated_at", type="string", format="date-time")
  * )
+  * @OA\Put(
+ *     path="/api/bookings/{booking}/status",
+ *     tags={"Bookings"},
+ *     summary="Update booking status",
+ *     description="Cập nhật trạng thái của một booking.
+ *     - Người dùng chỉ có thể **cancel** booking của chính mình.
+ *     - Venue owner/manager có thể cập nhật sang các trạng thái khác (confirmed-unpaid, accepted, rejected...).",
+ *     security={{"bearerAuth":{}}},
+ *     @OA\Parameter(
+ *         name="booking",
+ *         in="path",
+ *         required=true,
+ *         description="Booking ID",
+ *         @OA\Schema(type="integer", example=12)
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"status"},
+ *             @OA\Property(
+ *                 property="status",
+ *                 type="string",
+ *                 enum={"pending","confirmed-unpaid","paid-pending","partial-pending","accepted","rejected","cancelled","done"},
+ *                 example="accepted",
+ *                 description="Trạng thái mới của booking"
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Cập nhật trạng thái thành công",
+ *         @OA\JsonContent(ref="#/components/schemas/BookingResource")
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Unauthorized - chưa đăng nhập"
+ *     ),
+ *     @OA\Response(
+ *         response=403,
+ *         description="Forbidden - không có quyền cập nhật booking này"
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Validation error - trạng thái không hợp lệ"
+ *     )
+ * )
  */
-class BookingDocs {}
+class BookingDocs
+{
+}

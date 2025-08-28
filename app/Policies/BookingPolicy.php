@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\User;
 use App\Models\Venue;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Enums\BookingStatus;
 
 class BookingPolicy
 {
@@ -46,5 +47,17 @@ class BookingPolicy
         $venue = $booking->space->venue;
 
         return $this->isAdmin($user) || $this->isVenueOwnerOrManager($user, $venue) || $this->isBookingOwner($user, $booking);
+    }
+
+    public function updateStatus(User $user, Booking $booking, string $newStatus): bool
+    {
+        $booking->loadMissing('space.venue');
+        $venue = $booking->space->venue;
+
+        if ($newStatus === BookingStatus::CANCELLED->value) {
+            return $this->isBookingOwner($user, $booking);
+        }
+
+        return $this->isVenueOwnerOrManager($user, $venue);
     }
 }

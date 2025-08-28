@@ -194,4 +194,22 @@ class BookingRepository implements BookingRepositoryInterface
             throw $e;
         }
     }
+
+    public function updateStatus(Booking $booking, string $status): Booking
+    {
+        try {
+            $booking->update([
+                'status' => $status,
+            ]);
+
+            return $booking->fresh();
+        } catch (\Exception $e) {
+            Log::error('Update status failed: ' . $e->getMessage(), [
+                'booking_id' => $booking->id ?? null,
+                'status'     => $status,
+                'trace'      => $e->getTraceAsString(),
+            ]);
+            throw $e;
+        }
+    }
 }
