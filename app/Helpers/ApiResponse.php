@@ -10,7 +10,7 @@ class ApiResponse
     public static function success($data = [], ?string $message = null, int $code = HttpStatusCode::OK): JsonResponse
     {
         return response()->json([
-            'status' => true,
+            'isSuccess' => true,
             'statusCode' => $code,
             'message' => $message ?? __('success'),
             'data' => $data,
@@ -20,7 +20,7 @@ class ApiResponse
     public static function error(?string $message = null, $errors = [], int $code = HttpStatusCode::INTERNAL_SERVER_ERROR): JsonResponse
     {
         return response()->json([
-            'status' => false,
+            'isSuccess' => false,
             'statusCode' => $code,
             'message' => $message ?? __('error'),
             'errors' => $errors,

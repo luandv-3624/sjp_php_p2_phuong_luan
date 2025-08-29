@@ -31,6 +31,14 @@ class UserSeeder extends Seeder
                 'role_id' => 1, // user
             ],
             [
+                'name' => 'Hoang Van T',
+                'phone_number' => '0901001234',
+                'email' => 'user3@example.com',
+                'password' => Hash::make(env('DEFAULT_USER_PASSWORD', 'ChangeMe!123')),
+                'status' => 'inactive',
+                'role_id' => 1, // user
+            ],
+            [
                 'name' => 'Le Van C',
                 'phone_number' => '0901000003',
                 'email' => 'moderator@example.com',

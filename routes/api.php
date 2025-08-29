@@ -84,6 +84,8 @@ Route::middleware(['auth:sanctum', 'checkAccessTokenExpiry'])->group(function ()
         Route::get('/me', [BookingController::class, 'indexByUser']);
         Route::get('/{booking}', [BookingController::class, 'show'])->can('view', 'booking');
         Route::put('/{booking}/status', [BookingController::class, 'updateStatus']);
+        Route::post('/{booking}/check-in', [BookingController::class, 'checkIn'])->can('checkInOut', 'booking');
+        Route::post('/{booking}/check-out', [BookingController::class, 'checkOut'])->can('checkInOut', 'booking');
     });
 
     Route::prefix('payment')->group(function () {

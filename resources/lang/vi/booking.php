@@ -16,4 +16,13 @@ return [
     'mail_accepted'   => 'Thanh toán cho yêu cầu đặt phòng ":space" của bạn đã được xác nhận. Bạn có thể đến nhận phòng.',
     'status_updated'  => 'Cập nhật trạng thái đặt phòng thành công.',
     'cannot_cancel_in_status' => 'Đơn hàng đã ở trạng thái :status nên bạn không thể hủy, hãy liên hệ với quản trị viên của space để được hỗ trợ.',
+    'must_be_accepted_to_checkin' => 'Chỉ khi đơn đặt chỗ ở trạng thái ACCEPTED mới được check-in.',
+    'already_checked_in'          => 'Bạn đã check-in rồi.',
+    'invalid_checkin_time'        => 'Thời gian check-in phải nằm trong khoảng thời gian đặt chỗ.',
+    'checkin_success'             => 'Check-in thành công.',
+    'must_be_accepted_to_checkout' => 'Chỉ khi đơn đặt chỗ ở trạng thái ACCEPTED mới được check-out.',
+    'must_checkin_first'           => 'Bạn cần check-in trước khi check-out.',
+    'already_checked_out'          => 'Bạn đã check-out rồi.',
+    'invalid_checkout_time'        => 'Thời gian check-out phải nằm giữa lúc check-in và thời gian kết thúc.',
+    'checkout_success'             => 'Check-out thành công.',
 ];

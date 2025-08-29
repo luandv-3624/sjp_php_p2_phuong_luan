@@ -71,4 +71,74 @@ class BookingService implements BookingServiceInterface
             );
         }
     }
+
+    public function checkIn(int $bookingId): JsonResponse
+    {
+        try {
+            $booking = DB::transaction(function () use ($bookingId) {
+                $booking = $this->bookingRepo->findBookingForUpdate($bookingId);
+
+                if ($booking->status !== BookingStatus::ACCEPTED->value) {
+                    throw new \Exception(__('booking.must_be_accepted_to_checkin'));
+                }
+
+                if ($booking->check_in) {
+                    throw new \Exception(__('booking.already_checked_in'));
+                }
+
+                $now = now();
+
+                if ($now->lt($booking->start_time) || $now->gte($booking->end_time)) {
+                    throw new \Exception(__('booking.invalid_checkin_time'));
+                }
+
+                return $this->bookingRepo->updateCheckIn($booking, $now);
+            });
+
+            return ApiResponse::success($booking, __('booking.checkin_success'));
+        } catch (\Exception $e) {
+            return ApiResponse::error(
+                $e->getMessage(),
+                [],
+                HttpStatusCode::BAD_REQUEST
+            );
+        }
+    }
+
+    public function checkOut(int $bookingId): JsonResponse
+    {
+        try {
+            $booking = DB::transaction(function () use ($bookingId) {
+                $booking = $this->bookingRepo->findBookingForUpdate($bookingId);
+
+                if ($booking->status !== BookingStatus::ACCEPTED->value) {
+                    throw new \Exception(__('booking.must_be_accepted_to_checkout'));
+                }
+
+                if (!$booking->check_in) {
+                    throw new \Exception(__('booking.must_checkin_first'));
+                }
+
+                if ($booking->check_out) {
+                    throw new \Exception(__('booking.already_checked_out'));
+                }
+
+                $now = now();
+
+                if ($now->lt($booking->check_in) || $now->gt($booking->end_time)) {
+                    throw new \Exception(__('booking.invalid_checkout_time'));
+                }
+
+                return $this->bookingRepo->updateCheckOut($booking, $now);
+            });
+
+            return ApiResponse::success($booking, __('booking.checkout_success'));
+        } catch (\Exception $e) {
+            return ApiResponse::error(
+                $e->getMessage(),
+                [],
+                HttpStatusCode::BAD_REQUEST
+            );
+        }
+    }
 }

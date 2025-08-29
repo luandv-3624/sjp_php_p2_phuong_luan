@@ -12,4 +12,6 @@ interface BookingServiceInterface
     public function findById(int $id): JsonResponse;
     public function findAll(array $filters, ?int $pageSize): JsonResponse;
     public function updateStatus(Booking $booking, string $newStatus): JsonResponse;
+    public function checkIn(int $bookingId): JsonResponse;
+    public function checkOut(int $bookingId): JsonResponse;
 }

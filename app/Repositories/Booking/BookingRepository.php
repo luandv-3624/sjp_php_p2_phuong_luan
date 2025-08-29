@@ -219,4 +219,41 @@ class BookingRepository implements BookingRepositoryInterface
             throw $e;
         }
     }
+
+    public function updateCheckIn(Booking $booking, \DateTimeInterface $checkIn): Booking
+    {
+        try {
+            $booking->update([
+                'check_in' => $checkIn,
+            ]);
+
+            return $booking->fresh();
+        } catch (\Exception $e) {
+            Log::error('Update check-in failed: ' . $e->getMessage(), [
+                'booking_id' => $booking->id ?? null,
+                'check_in'   => $checkIn,
+                'trace'      => $e->getTraceAsString(),
+            ]);
+            throw $e;
+        }
+    }
+
+    public function updateCheckOut(Booking $booking, \DateTimeInterface $checkOut): Booking
+    {
+        try {
+            $booking->update([
+                'check_out' => $checkOut,
+                'status'    => BookingStatus::DONE->value, // Done khi checkout
+            ]);
+
+            return $booking->fresh();
+        } catch (\Exception $e) {
+            Log::error('Update check-out failed: ' . $e->getMessage(), [
+                'booking_id' => $booking->id ?? null,
+                'check_out'  => $checkOut,
+                'trace'      => $e->getTraceAsString(),
+            ]);
+            throw $e;
+        }
+    }
 }

@@ -60,4 +60,13 @@ class BookingPolicy
 
         return $this->isVenueOwnerOrManager($user, $venue);
     }
+
+    public function checkInOut(User $user, Booking $booking)
+    {
+        $booking->loadMissing('space.venue');
+
+        $venue = $booking->space->venue;
+
+        return $this->isVenueOwnerOrManager($user, $venue) || $this->isBookingOwner($user, $booking);
+    }
 }

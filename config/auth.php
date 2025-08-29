@@ -107,6 +107,6 @@ return [
     */
 
     'password_timeout' => 10800,
-    'access_token_expired_time' => env('ACCESS_TOKEN_EXPIRES_REFRESH_HOURS', 1),
+    'access_token_expired_time' => env('ACCESS_TOKEN_EXPIRES_REFRESH_HOURS', 10),
     'refresh_token_expired_time' => env('REFRESH_TOKEN_EXPIRES_REFRESH_DAYS', 15)
 ];

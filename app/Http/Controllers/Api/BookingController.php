@@ -55,4 +55,14 @@ class BookingController extends Controller
 
         return $this->bookingService->updateStatus($booking, $data['status']);
     }
+
+    public function checkIn(Booking $booking)
+    {
+        return $this->bookingService->checkIn($booking->id);
+    }
+
+    public function checkOut(Booking $booking)
+    {
+        return $this->bookingService->checkOut($booking->id);
+    }
 }

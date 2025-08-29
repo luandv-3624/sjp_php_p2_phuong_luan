@@ -16,4 +16,14 @@ return [
     'mail_accepted'   => 'Your payment for the booking ":space" has been accepted. You can check in at the venue.',
     'status_updated'  => 'Booking status updated successfully.',
     'cannot_cancel_in_status' => 'The booking is already in :status status, so you cannot cancel it. Please contact the space administrator for support.',
+    'must_be_accepted_to_checkin' => 'Booking must be in ACCEPTED status to check in.',
+    'already_checked_in'          => 'You have already checked in.',
+    'invalid_checkin_time'        => 'Check-in time must be within the booking period.',
+    'checkin_success'             => 'Checked in successfully.',
+    'must_be_accepted_to_checkout' => 'Booking must be in ACCEPTED status to check out.',
+    'must_checkin_first'           => 'You must check in before checking out.',
+    'already_checked_out'          => 'You have already checked out.',
+    'invalid_checkout_time'        => 'Check-out time must be between check-in time and end time.',
+    'checkout_success'             => 'Checked out successfully.',
+
 ];

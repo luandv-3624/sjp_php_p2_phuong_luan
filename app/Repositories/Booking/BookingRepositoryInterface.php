@@ -13,4 +13,6 @@ interface BookingRepositoryInterface
     public function findBookingForUpdate(int $id): ?Booking;
     public function updateBookingPaymentStatus(Booking $booking, array $bookingUpdateData): Booking;
     public function updateStatus(Booking $booking, string $status): Booking;
+    public function updateCheckIn(Booking $booking, \DateTimeInterface $checkIn): Booking;
+    public function updateCheckOut(Booking $booking, \DateTimeInterface $checkOut): Booking;
 }

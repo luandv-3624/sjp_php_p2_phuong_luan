@@ -4,6 +4,7 @@ namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Enums\AccountStatus;
 
 class UpdateStatusRequest extends FormRequest
 {

@@ -178,7 +178,9 @@ use OpenApi\Annotations as OA;
  *   @OA\Property(property="amount", type="number", format="float", example=120.50),
  *   @OA\Property(property="status", type="string", example="paid"),
  *   @OA\Property(property="paid_at", type="string", format="date-time", nullable=true, example="2025-08-28T12:30:00Z")
-  * @OA\Put(
+ * )
+ *
+ * @OA\Put(
  *     path="/api/bookings/{booking}/status",
  *     tags={"Bookings"},
  *     summary="Update booking status",
@@ -222,6 +224,67 @@ use OpenApi\Annotations as OA;
  *     @OA\Response(
  *         response=422,
  *         description="Validation error - trạng thái không hợp lệ"
+ *     )
+ * )
+ *
+ * @OA\Post(
+ *     path="/api/bookings/{booking}/check-in",
+ *     tags={"Bookings"},
+ *     summary="Check-in booking",
+ *     description="Người dùng thực hiện check-in cho booking đã **được chấp nhận (accepted)**.
+ *     - Chỉ được check-in trong khoảng thời gian booking có hiệu lực.
+ *     - Không thể check-in nếu đã check-in trước đó.",
+ *     security={{"bearerAuth":{}}},
+ *     @OA\Parameter(
+ *         name="booking",
+ *         in="path",
+ *         required=true,
+ *         description="Booking ID",
+ *         @OA\Schema(type="integer", example=15)
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Check-in thành công",
+ *         @OA\JsonContent(ref="#/components/schemas/BookingResource")
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Bad Request - Lỗi nghiệp vụ (ví dụ: chưa tới giờ check-in, đã check-in, booking chưa được accepted...)"
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Unauthorized"
+ *     )
+ * )
+ *
+ * @OA\Post(
+ *     path="/api/bookings/{booking}/check-out",
+ *     tags={"Bookings"},
+ *     summary="Check-out booking",
+ *     description="Người dùng thực hiện check-out cho booking đã check-in.
+ *     - Booking phải có **status = accepted**.
+ *     - Không thể check-out nếu chưa check-in hoặc đã check-out trước đó.
+ *     - Thời gian check-out phải nằm trong thời gian booking.",
+ *     security={{"bearerAuth":{}}},
+ *     @OA\Parameter(
+ *         name="booking",
+ *         in="path",
+ *         required=true,
+ *         description="Booking ID",
+ *         @OA\Schema(type="integer", example=15)
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Check-out thành công",
+ *         @OA\JsonContent(ref="#/components/schemas/BookingResource")
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Bad Request - Lỗi nghiệp vụ (ví dụ: chưa check-in, đã check-out, booking chưa được accepted...)"
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Unauthorized"
  *     )
  * )
  */

@@ -108,7 +108,6 @@ use OpenApi\Annotations as OA;
  *             @OA\Property(property="email", type="string", format="email", example="user@example.com"),
  *             @OA\Property(property="phone_number", type="string", example="0987654321"),
  *             @OA\Property(property="password", type="string", format="password", example="123456"),
- *             @OA\Property(property="role_id", type="integer", example=2)
  *         )
  *     ),
  *     @OA\Response(
