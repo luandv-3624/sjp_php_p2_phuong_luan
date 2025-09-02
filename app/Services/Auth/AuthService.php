@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use App\Enums\AccountStatus;
 use App\Http\Resources\User\UserResource;
 use App\Repositories\Auth\PasswordResetRepositoryInterface;
 use App\Repositories\Auth\AuthRepositoryInterface;
@@ -59,6 +60,52 @@ class AuthService
             'refresh_token'            => $refreshToken['plainTextToken'],
             'refresh_token_expires_at' => $refreshToken['expiresAt'],
             'token_type'               => 'Bearer',
+        ], __('auth.login_success'));
+    }
+
+    public function loginWithGoogle(array $data)
+    {
+        $user = $this->userRepo->findByEmail($data['email']);
+
+        if (!$user) {
+            $role = $this->userRepo->getRoleByName(ROLE::USER);
+            if (!$role) {
+                return ApiResponse::error(__('auth.role_not_found'), [], HttpStatusCode::BAD_REQUEST);
+            }
+
+            $user = $this->userRepo->create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'google_id' => $data['google_id'],
+                'email_verified_at' => Carbon::now(),
+                'password' => '',
+                'role_id' => $role->id,
+            ]);
+        }
+
+        if (!isset($user->google_id)) {
+            $user->google_id = $data['google_id'];
+            $user->save();
+        }
+
+        if (!isset($user->email_verified_at)) {
+            $user->email_verified_at = Carbon::now();
+            $user->save();
+        }
+
+        if ($user->status === AccountStatus::INACTIVE->value) {
+            return ApiResponse::error(__('auth.account_inactive'), [], HttpStatusCode::FORBIDDEN);
+        }
+
+        $accessToken = $this->authRepo->createToken($user, 'access_token', ['*'], Carbon::now()->addHours($this->accessTokenExpiredTime));
+        $refreshToken = $this->authRepo->createToken($user, 'refresh_token', ['refresh'], Carbon::now()->addDays($this->refreshTokenExpiredTime));
+
+        return ApiResponse::success([
+            'access_token' => $accessToken['plainTextToken'],
+            'access_token_expires_at' => $accessToken['expiresAt'],
+            'refresh_token' => $refreshToken['plainTextToken'],
+            'refresh_token_expires_at' => $refreshToken['expiresAt'],
+            'token_type' => 'Bearer',
         ], __('auth.login_success'));
     }
 

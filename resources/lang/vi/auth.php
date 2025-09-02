@@ -39,5 +39,7 @@ return [
     'reset_password_request_too_soon' => 'Bạn chỉ có thể yêu cầu đặt lại mật khẩu một lần mỗi phút.',
     'invalid_token' => 'Mã đặt lại mật khẩu không hợp lệ.',
     'reset_password_failed_send_mail' => 'Không thể gửi email đặt lại mật khẩu. Vui lòng thử lại sau.',
-    'user_updated' => 'Thông tin của bạn đã được cập nhật thành công.'
+    'user_updated' => 'Thông tin của bạn đã được cập nhật thành công.',
+    'unable_auth_google' => 'Có lỗi xảy ra khi xác thực bằng Google',
+    'account_inactive' => 'Tài khoản của bạn không hoạt động. Vui lòng liên hệ với bộ phận hỗ trợ.',
 ];
