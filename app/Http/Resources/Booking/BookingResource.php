@@ -26,6 +26,7 @@ class BookingResource extends JsonResource
             'check_out' => $this->check_out,
             'status' => $this->status,
             'status_payment' => $this->status_payment,
+            'payments' => PaymentResource::collection($this->whenLoaded('payments')),
             'total_price' => $this->total_price,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

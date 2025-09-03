@@ -17,7 +17,9 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             PriceTypeSeeder::class,
+            SpaceTypeSeeder::class,
             ProvinceAndWardSeeder::class,
+            VenueSpaceSeeder::class,
         ]);
     }
 }

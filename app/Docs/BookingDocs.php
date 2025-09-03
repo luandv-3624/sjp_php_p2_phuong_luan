@@ -118,6 +118,7 @@ use OpenApi\Annotations as OA;
  *     @OA\Property(property="check_out", type="string", format="date-time", nullable=true),
  *     @OA\Property(property="status", type="string", example="pending"),
  *     @OA\Property(property="status_payment", type="string", example="unpaid"),
+ *     @OA\Property(property="payments", type="array", @OA\Items(ref="#/components/schemas/Payment")),
  *     @OA\Property(property="total_price", type="number", format="float", example=200.50),
  *     @OA\Property(property="created_at", type="string", format="date-time"),
  *     @OA\Property(property="updated_at", type="string", format="date-time")
@@ -166,6 +167,17 @@ use OpenApi\Annotations as OA;
  *     @OA\Property(property="status", type="string", example="available"),
  *     @OA\Property(property="created_at", type="string", format="date-time"),
  *     @OA\Property(property="updated_at", type="string", format="date-time")
+ * )
+ * 
+ * @OA\Schema(
+ *   schema="Payment",
+ *   type="object",
+ *   title="Payment Resource",
+ *   @OA\Property(property="id", type="integer", example=1),
+ *   @OA\Property(property="method", type="string", example="credit_card"),
+ *   @OA\Property(property="amount", type="number", format="float", example=120.50),
+ *   @OA\Property(property="status", type="string", example="paid"),
+ *   @OA\Property(property="paid_at", type="string", format="date-time", nullable=true, example="2025-08-28T12:30:00Z")
  * )
  */
 class BookingDocs {}

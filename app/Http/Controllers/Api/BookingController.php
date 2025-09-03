@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Booking\IndexByUserRequest;
 use App\Http\Requests\Booking\IndexRequest;
 use App\Http\Requests\Booking\StoreRequest;
 use App\Models\Booking;
@@ -32,5 +33,16 @@ class BookingController extends Controller
         $query = $request->validated();
 
         return $this->bookingService->findAll($query, $query['perPage'] ?? null);
+    }
+
+    public function indexByUser(IndexByUserRequest $request)
+    {
+        $user = $request->user();
+        $query = $request->validated();
+
+        return $this->bookingService->findAll(
+            [...$query, 'userId' => $user->id],
+            $query['pageSize'] ?? null
+        );
     }
 }
