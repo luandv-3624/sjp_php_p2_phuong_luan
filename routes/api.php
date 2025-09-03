@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\SpaceController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Venue\VenueController;
 use App\Http\Controllers\Amenity\AmenityController;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,8 @@ Route::prefix('auth')->group(function () {
         ->middleware('throttle:password-reset');
     Route::post('password/reset', [AuthController::class, 'resetPassword']);
     Route::middleware(['auth:sanctum', 'checkAccessTokenExpiry'])->post('logout', [AuthController::class, 'logout'])->name('auth.logout');
+    Route::get('google', [GoogleAuthController::class, 'redirectToGoogle'])->name('google.login');
+    Route::get('google/callback', [GoogleAuthController::class, 'handleGoogleCallback']);
 });
 
 Route::prefix('users')->middleware(['auth:sanctum', 'checkAccessTokenExpiry', 'role:admin,moderator'])->group(function () {
