@@ -122,17 +122,13 @@ class AuthService
         }
 
         $user = $refreshToken->tokenable;
-        $this->authRepo->deleteToken($refreshToken);
 
-        $newAccessToken  = $this->authRepo->createToken($user, 'access_token', ['*'], Carbon::now()->addHours($this->accessTokenExpiredTime));
-        $newRefreshToken = $this->authRepo->createToken($user, 'refresh_token', ['refresh'], Carbon::now()->addDays($this->refreshTokenExpiredTime));
+        $newAccessToken = $this->authRepo->createToken($user, 'access_token', ['*'], Carbon::now()->addHours($this->accessTokenExpiredTime));
 
         return ApiResponse::success([
-            'access_token'             => $newAccessToken['plainTextToken'],
-            'access_token_expires_at'  => $newAccessToken['expiresAt'],
-            'refresh_token'            => $newRefreshToken['plainTextToken'],
-            'refresh_token_expires_at' => $newRefreshToken['expiresAt'],
-            'token_type'               => 'Bearer',
+            'access_token' => $newAccessToken['plainTextToken'],
+            'access_token_expires_at' => $newAccessToken['expiresAt'],
+            'token_type' => 'Bearer',
         ], __('auth.refresh_token_success'));
     }
 

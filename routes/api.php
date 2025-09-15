@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
     Route::post('signup', [AuthController::class, 'signup'])->name('auth.signup');
-    Route::get('verify', [AuthController::class, 'verify'])->name('auth.verify');
+    Route::post('verify', [AuthController::class, 'verify'])->name('auth.verify');
     Route::post('resend-verification', [AuthController::class, 'resendVerification'])
         ->middleware('throttle:resend-verification')->name('auth.resend');
     Route::post('login', [AuthController::class, 'login'])->name('auth.login');

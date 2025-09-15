@@ -54,7 +54,11 @@ class AuthController extends Controller
 
     public function verify(Request $request)
     {
-        return $this->authService->verifyAccount($request->query('token'));
+        $data = $request->validate([
+            'token' => 'required|string',
+        ]);
+
+        return $this->authService->verifyAccount($data['token']);
     }
 
     public function resendVerification(Request $request)
