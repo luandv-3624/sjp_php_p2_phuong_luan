@@ -24,13 +24,14 @@ class VerifyEmail extends Mailable
 
     public function build()
     {
-        $verifyUrl = url("/api/auth/verify?token={$this->token}");
+        $domain = config('app.url');
+        $verifyUrl = url("{$domain}/verify-email?token={$this->token}");
 
         return $this->subject(__('auth.verify_email_subject'))
-                    ->view('emails.verify')
-                    ->with([
-                        'name' => $this->user->name,
-                        'verifyUrl' => $verifyUrl,
-                    ]);
+            ->view('emails.verify')
+            ->with([
+                'name' => $this->user->name,
+                'verifyUrl' => $verifyUrl,
+            ]);
     }
 }
