@@ -101,3 +101,5 @@ Route::post('/payment/momo/ipn', [PaymentController::class, 'momoIpn'])
 
 Route::get('/provinces', [AddressController::class, 'provincesIndex']);
 Route::get('/provinces/{province}/wards', [AddressController::class, 'wardsIndex']);
+Route::get('/space-types', [SpaceController::class, 'spaceTypesIndex']);
+Route::get('/price-types', [SpaceController::class, 'priceTypesIndex']);

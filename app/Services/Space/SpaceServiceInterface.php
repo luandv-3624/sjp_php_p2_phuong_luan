@@ -11,4 +11,6 @@ interface SpaceServiceInterface
     public function findById(int $id): JsonResponse;
     public function findAllByVenue(int $venueId): JsonResponse;
     public function findAll(array $filters, ?int $pageSize): JsonResponse;
+    public function findAllPriceTypes(): JsonResponse;
+    public function findAllSpaceTypes(): JsonResponse;
 }

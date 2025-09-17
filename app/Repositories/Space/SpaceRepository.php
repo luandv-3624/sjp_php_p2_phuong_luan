@@ -5,7 +5,9 @@ namespace App\Repositories\Space;
 use App\Enums\BookingStatus;
 use App\Enums\SortOrder;
 use App\Enums\SpacesSortBy;
+use App\Models\PriceType;
 use App\Models\Space;
+use App\Models\SpaceType;
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -152,5 +154,17 @@ class SpaceRepository implements SpaceRepositoryInterface
         return $query
             ->orderBy($sortBy->value, $sortOrder->value)
             ->paginate($pageSize);
+    }
+    public function findAllPriceTypes(): Collection
+    {
+        return PriceType::select('id', 'name', 'name_en')
+            ->orderBy('name')
+            ->get();
+    }
+    public function findAllSpaceTypes(): Collection
+    {
+        return SpaceType::select('id', 'name')
+            ->orderBy('name')
+            ->get();
     }
 }

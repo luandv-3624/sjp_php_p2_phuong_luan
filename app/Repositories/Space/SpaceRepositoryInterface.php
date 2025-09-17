@@ -13,4 +13,6 @@ interface SpaceRepositoryInterface
     public function findById(int $id): Space;
     public function findAllByVenue(int $venueId): Collection;
     public function findAll(array $filters, ?int $pageSize): LengthAwarePaginator;
+    public function findAllPriceTypes(): Collection;
+    public function findAllSpaceTypes(): Collection;
 }

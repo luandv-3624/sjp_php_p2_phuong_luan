@@ -41,4 +41,14 @@ class SpaceController extends BaseApiController
     {
         return $this->spaceService->findAll($request->validated(), $request->get('pageSize'));
     }
+
+    public function spaceTypesIndex(): JsonResponse
+    {
+        return $this->spaceService->findAllSpaceTypes();
+    }
+
+    public function priceTypesIndex(): JsonResponse
+    {
+        return $this->spaceService->findAllPriceTypes();
+    }
 }
