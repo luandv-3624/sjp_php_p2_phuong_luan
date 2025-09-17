@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Repositories\Address\AddressRepository;
+use App\Repositories\Address\AddressRepositoryInterface;
+use App\Services\Address\AddressService;
+use App\Services\Address\AddressServiceInterface;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\Auth\AuthRepositoryInterface;
 use App\Repositories\Auth\AuthRepository;
@@ -49,6 +53,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(BookingServiceInterface::class, BookingService::class);
         $this->app->bind(PaymentRepositoryInterface::class, PaymentRepository::class);
         $this->app->bind(PaymentServiceInterface::class, PaymentService::class);
+        $this->app->bind(AddressRepositoryInterface::class, AddressRepository::class);
+        $this->app->bind(AddressServiceInterface::class, AddressService::class);
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\SpaceController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\UserController;
@@ -97,3 +98,6 @@ Route::get('/payment/momo/redirect', [PaymentController::class, 'momoRedirect'])
 Route::post('/payment/momo/ipn', [PaymentController::class, 'momoIpn'])
     ->middleware('throttle:momo-ipn')
     ->name('payment.momo.ipn');
+
+Route::get('/provinces', [AddressController::class, 'provincesIndex']);
+Route::get('/provinces/{province}/wards', [AddressController::class, 'wardsIndex']);
