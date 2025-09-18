@@ -37,4 +37,14 @@ class SpaceService implements SpaceServiceInterface
     {
         return ApiResponse::success(new SpaceCollection($this->spaceRepo->findAll($filters, $pageSize)));
     }
+
+    public function findAllPriceTypes(): JsonResponse
+    {
+        return ApiResponse::success($this->spaceRepo->findAllPriceTypes());
+    }
+
+    public function findAllSpaceTypes(): JsonResponse
+    {
+        return ApiResponse::success($this->spaceRepo->findAllSpaceTypes());
+    }
 }
