@@ -24,6 +24,7 @@ class SpaceResource extends JsonResource
             'capacity' => $this->capacity,
             'price_type' => new PriceTypeResource($this->whenLoaded('priceType')),
             'price' => $this->price,
+            'amenities'  => AmenityResource::collection($this->whenLoaded('amenities')),
             'description' => $this->description,
             'status' => $this->status,
             'created_at' => $this->created_at,

@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SpaceRepository implements SpaceRepositoryInterface
 {
-    const PAGE_SIZE = 10;
+    public const PAGE_SIZE = 10;
 
     public function create(array $data): Space
     {
@@ -55,7 +55,7 @@ class SpaceRepository implements SpaceRepositoryInterface
 
     public function findById(int $id): Space
     {
-        $space = Space::with(['type', 'priceType'])->find($id);
+        $space = Space::with(['type', 'priceType', 'venue', 'amenities'])->find($id);
 
         if (!$space) {
             throw new NotFoundHttpException(__('space.space_not_found'));
