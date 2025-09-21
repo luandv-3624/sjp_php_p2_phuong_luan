@@ -21,6 +21,7 @@ class VenueResource extends JsonResource
             'name' => $this->name,
             'address' => $this->address,
             'ward' => new WardResource($this->whenLoaded('ward')),
+            'managers' => UserResource::collection($this->whenLoaded('managers')),
             'lat' => $this->lat,
             'lng' => $this->lng,
             'description' => $this->description,

@@ -10,6 +10,7 @@ use App\Enums\HttpStatusCode;
 use App\Enums\Role;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Venue;
+use App\Http\Resources\Venue\VenueCollection;
 
 class VenueService
 {
@@ -29,6 +30,11 @@ class VenueService
         $venue = $this->venueRepo->create($data);
 
         return ApiResponse::success($venue, __('venue.created_success'), HttpStatusCode::CREATED);
+    }
+
+    public function findAll(array $filters, ?int $pageSize)
+    {
+        return ApiResponse::success(new VenueCollection($this->venueRepo->findAll($filters, $pageSize)));
     }
 
     public function updateVenue(Venue $venue, array $data)

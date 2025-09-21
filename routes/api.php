@@ -46,6 +46,7 @@ Route::prefix('users')->middleware(['auth:sanctum', 'checkAccessTokenExpiry', 'r
 Route::middleware(['auth:sanctum', 'checkAccessTokenExpiry'])->group(function () {
     Route::prefix('venues')->group(function () {
         Route::post('/', [VenueController::class, 'store']);
+        Route::get('/', [VenueController::class, 'index']);
         Route::put('/{venue}', [VenueController::class, 'update']);
         Route::delete('/{venue}', [VenueController::class, 'destroy']);
         Route::get('/{venue}', [VenueController::class, 'show']);

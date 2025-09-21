@@ -9,6 +9,7 @@ use App\Http\Requests\Venue\UpdateVenueRequest;
 use App\Http\Requests\Venue\UpdateVenueStatusRequest;
 use App\Http\Requests\Venue\AddManagerRequest;
 use App\Models\Venue;
+use App\Http\Requests\Venue\IndexRequest;
 
 class VenueController extends Controller
 {
@@ -24,6 +25,13 @@ class VenueController extends Controller
         $data = $request->validated();
 
         return $this->venueService->createVenue($data);
+    }
+
+    public function index(IndexRequest $request)
+    {
+        $query = $request->validated();
+
+        return $this->venueService->findAll($query, $query['perPage'] ?? null);
     }
 
     public function update(UpdateVenueRequest $request, Venue $venue)

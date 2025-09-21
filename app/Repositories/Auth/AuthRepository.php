@@ -94,6 +94,7 @@ class AuthRepository implements AuthRepositoryInterface
     public function findOne(int $id): User
     {
         $user = User::find($id);
+        $user->load('role');
 
         if (!$user) {
             throw new NotFoundHttpException(__('auth.user_not_found'));

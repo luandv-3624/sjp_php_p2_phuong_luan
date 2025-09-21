@@ -2,11 +2,12 @@
 
 namespace App\Repositories\Venue;
 
-use App\Models\Venue;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 interface VenueRepositoryInterface
 {
     public function create(array $data);
+    public function findAll(array $filters, ?int $pageSize): LengthAwarePaginator;
 
     public function update(int $venueId, array $data);
 
