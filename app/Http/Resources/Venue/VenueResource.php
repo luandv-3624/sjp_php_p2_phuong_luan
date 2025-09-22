@@ -17,9 +17,11 @@ class VenueResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'owner_id' => $this->owner_id,
             'owner' => new UserResource($this->whenLoaded('owner')),
             'name' => $this->name,
             'address' => $this->address,
+            'ward_id' => $this->ward,
             'ward' => new WardResource($this->whenLoaded('ward')),
             'managers' => UserResource::collection($this->whenLoaded('managers')),
             'lat' => $this->lat,

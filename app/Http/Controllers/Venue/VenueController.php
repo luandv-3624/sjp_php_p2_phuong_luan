@@ -10,6 +10,7 @@ use App\Http\Requests\Venue\UpdateVenueStatusRequest;
 use App\Http\Requests\Venue\AddManagerRequest;
 use App\Models\Venue;
 use App\Http\Requests\Venue\IndexRequest;
+use Illuminate\Http\Request;
 
 class VenueController extends Controller
 {
@@ -63,5 +64,10 @@ class VenueController extends Controller
         $data = $request->validated();
 
         return $this->venueService->updateStatusVenue($venue, $data['status']);
+    }
+
+    public function indexMine(Request $request)
+    {
+        return $this->venueService->findAllByUser($request->user()->id);
     }
 }

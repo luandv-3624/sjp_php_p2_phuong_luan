@@ -49,6 +49,7 @@ Route::middleware(['auth:sanctum', 'checkAccessTokenExpiry'])->group(function ()
         Route::get('/', [VenueController::class, 'index']);
         Route::put('/{venue}', [VenueController::class, 'update']);
         Route::delete('/{venue}', [VenueController::class, 'destroy']);
+        Route::get('/mine', [VenueController::class, 'indexMine']);
         Route::get('/{venue}', [VenueController::class, 'show']);
         Route::post('/{venue}/managers', [VenueController::class, 'addManager']);
 
