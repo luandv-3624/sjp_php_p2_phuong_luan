@@ -2,6 +2,7 @@
 
 namespace App\Services\Venue;
 
+use App\Http\Resources\Venue\VenueCollection;
 use App\Repositories\Venue\VenueRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\VenueStatus;
@@ -10,7 +11,6 @@ use App\Enums\HttpStatusCode;
 use App\Enums\Role;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Venue;
-use App\Http\Resources\Venue\VenueCollection;
 
 class VenueService
 {
@@ -121,5 +121,10 @@ class VenueService
             default:
                 return ApiResponse::success($venue, __('venue.updated_status_success'));
         }
+    }
+
+    public function findAllByUser(int $userId)
+    {
+        return ApiResponse::success(new VenueCollection($this->venueRepo->findAllByUser($userId)));
     }
 }

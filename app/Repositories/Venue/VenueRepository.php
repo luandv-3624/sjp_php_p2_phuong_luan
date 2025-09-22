@@ -151,4 +151,15 @@ class VenueRepository implements VenueRepositoryInterface
 
         return $venue->load('managers');
     }
+
+    public function findAllByUser(int $userId)
+    {
+        $venues = Venue::leftJoin('venue_managers', 'venues.id', '=', 'venue_managers.venue_id')
+            ->where('venues.owner_id', $userId)
+            ->orWhere('venue_managers.user_id', $userId)
+            ->orderBy('venues.updated_at', 'desc')
+            ->paginate(self::PAGE_SIZE);
+
+        return $venues;
+    }
 }

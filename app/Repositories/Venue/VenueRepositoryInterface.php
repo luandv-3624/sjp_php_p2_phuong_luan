@@ -18,4 +18,6 @@ interface VenueRepositoryInterface
     public function findByIdCustomer(int $venueId);
 
     public function addManager(int $venueId, array $userIds);
+
+    public function findAllByUser(int $userId);
 }
