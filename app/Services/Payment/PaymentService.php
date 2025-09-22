@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\Booking\BookingRepositoryInterface;
 use App\Services\Momo\MomoClient;
+use App\Events\PaymentUpdated;
 
 class PaymentService implements PaymentServiceInterface
 {
@@ -93,12 +94,15 @@ class PaymentService implements PaymentServiceInterface
     public function handleMomoIpn(array $data): JsonResponse
     {
         $validation = $this->momoClient->validateIpn($data);
+        $requestId = $data['requestId'];
 
         if (!$validation['isValid']) {
+            event(new PaymentUpdated($requestId, 'failed'));
             return ApiResponse::error(__('payment.invalid_signature'), [], HttpStatusCode::BAD_REQUEST);
         }
 
         if (!$validation['isSuccess']) {
+            event(new PaymentUpdated($requestId, 'failed'));
             // Transaction failed but signature is valid, but still return 200 so MoMo does not resend
             return ApiResponse::success([], __('payment.transaction_not_successful'), HttpStatusCode::OK);
         }
@@ -116,8 +120,9 @@ class PaymentService implements PaymentServiceInterface
             return ApiResponse::success([], __('payment.already_processed'), HttpStatusCode::OK);
         }
 
+
         try {
-            DB::transaction(function () use ($bookingId, $data) {
+            DB::transaction(function () use ($bookingId, $data, $requestId) {
                 $booking = $this->bookingRepo->findBookingForUpdate($bookingId);
 
                 if (!$booking) {
@@ -158,10 +163,14 @@ class PaymentService implements PaymentServiceInterface
                     'order_id'   => $data['orderId'],
                     'trans_id'   => $data['transId'],
                 ]);
+
+                event(new PaymentUpdated($requestId, 'success'));
             }, 5);
         } catch (\DomainException $e) {
+            event(new PaymentUpdated($requestId, 'failed'));
             return ApiResponse::error($e->getMessage(), [], HttpStatusCode::BAD_REQUEST);
         } catch (\Throwable $e) {
+            event(new PaymentUpdated($requestId, 'failed'));
             Log::error('Momo payment transaction failed', [
                     'error' => $e->getMessage(),
                     'trace' => $e->getTraceAsString(),

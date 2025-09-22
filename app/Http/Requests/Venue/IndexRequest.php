@@ -41,7 +41,7 @@ class IndexRequest extends FormRequest
                 Rule::in(SortOrder::values()), // asc, desc
             ],
 
-            'perPage' => 'sometimes|integer|min:1|max:100',
+            'pageSize' => 'sometimes|integer|min:1|max:100',
         ];
     }
 }

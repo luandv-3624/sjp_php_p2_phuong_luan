@@ -31,7 +31,7 @@ class VenueController extends Controller
     {
         $query = $request->validated();
 
-        return $this->venueService->findAll($query, $query['perPage'] ?? null);
+        return $this->venueService->findAll($query, $query['pageSize'] ?? null);
     }
 
     public function update(UpdateVenueRequest $request, Venue $venue)
