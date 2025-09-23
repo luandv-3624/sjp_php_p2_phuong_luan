@@ -47,6 +47,7 @@ Route::middleware(['auth:sanctum', 'checkAccessTokenExpiry'])->group(function ()
     Route::prefix('venues')->group(function () {
         Route::post('/', [VenueController::class, 'store']);
         Route::get('/', [VenueController::class, 'index']);
+        Route::get('/me', [VenueController::class, 'indexByUser']);
         Route::put('/{venue}', [VenueController::class, 'update']);
         Route::delete('/{venue}', [VenueController::class, 'destroy']);
         Route::get('/mine', [VenueController::class, 'indexMine']);
@@ -85,6 +86,7 @@ Route::middleware(['auth:sanctum', 'checkAccessTokenExpiry'])->group(function ()
         Route::post('/', [BookingController::class, 'store']);
         Route::get('/', [BookingController::class, 'index'])->middleware('role:admin,moderator');
         Route::get('/me', [BookingController::class, 'indexByUser']);
+        Route::get('/om', [BookingController::class, 'indexByOM']);
         Route::get('/{booking}', [BookingController::class, 'show'])->can('view', 'booking');
         Route::put('/{booking}/status', [BookingController::class, 'updateStatus']);
         Route::post('/{booking}/check-in', [BookingController::class, 'checkIn'])->can('checkInOut', 'booking');

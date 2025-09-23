@@ -36,6 +36,7 @@ class VenueRepository implements VenueRepositoryInterface
             $sortOrder = SortOrder::tryFrom($filters['sortOrder'] ?? null) ?? SortOrder::DESC;
             $perPage = $pageSize ?? self::PAGE_SIZE;
 
+            $userId = $filters['userId'] ?? null;
             $ownerId  = $filters['ownerId'] ?? null;
             $wardId   = $filters['wardId'] ?? null;
             $status   = VenueStatus::tryFrom($filters['status'] ?? null);
@@ -45,6 +46,14 @@ class VenueRepository implements VenueRepositoryInterface
             $venues = Venue::with(['owner', 'ward', 'managers'])
                 ->when(isset($ownerId), function ($query) use ($ownerId) {
                     $query->where('owner_id', $ownerId);
+                })
+                ->when(isset($userId), function ($query) use ($userId) {
+                    $query->where(function ($q) use ($userId) {
+                        $q->where('owner_id', $userId)
+                          ->orWhereHas('managers', function ($mq) use ($userId) {
+                              $mq->where('users.id', $userId);
+                          });
+                    });
                 })
                 ->when(isset($wardId), function ($query) use ($wardId) {
                     $query->where('ward_id', $wardId);

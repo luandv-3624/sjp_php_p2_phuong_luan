@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\BookingStatusChangedMail;
 use App\Enums\HttpStatusCode;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class BookingService implements BookingServiceInterface
 {
@@ -34,6 +35,11 @@ class BookingService implements BookingServiceInterface
     public function findAll(array $filters, ?int $pageSize): JsonResponse
     {
         return ApiResponse::success(new BookingCollection($this->bookingRepo->findAll($filters, $pageSize)));
+    }
+
+    public function findAllByOM(array $filters, ?int $pageSize, User $currentUser): JsonResponse
+    {
+        return ApiResponse::success(new BookingCollection($this->bookingRepo->findAllByOM($filters, $pageSize, $currentUser)));
     }
 
     public function updateStatus(Booking $booking, string $newStatus): JsonResponse

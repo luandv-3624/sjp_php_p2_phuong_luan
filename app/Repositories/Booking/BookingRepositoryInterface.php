@@ -3,6 +3,7 @@
 namespace App\Repositories\Booking;
 
 use App\Models\Booking;
+use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 interface BookingRepositoryInterface
@@ -10,6 +11,7 @@ interface BookingRepositoryInterface
     public function create(array $data): Booking;
     public function findById(int $id): Booking;
     public function findAll(array $filters, ?int $pageSize): LengthAwarePaginator;
+    public function findAllByOM(array $filters, ?int $pageSize, User $currentUser): LengthAwarePaginator;
     public function findBookingForUpdate(int $id): ?Booking;
     public function updateBookingPaymentStatus(Booking $booking, array $bookingUpdateData): Booking;
     public function updateStatus(Booking $booking, string $status): Booking;

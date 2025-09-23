@@ -49,6 +49,18 @@ class BookingController extends Controller
         );
     }
 
+    public function indexByOM(IndexRequest $request)
+    {
+        $user = $request->user();
+        $query = $request->validated();
+
+        return $this->bookingService->findAllByOM(
+            [...$query],
+            $query['pageSize'] ?? null,
+            $user
+        );
+    }
+
     public function updateStatus(UpdateBookingStatusRequest $request, Booking $booking)
     {
         $data = $request->validated();

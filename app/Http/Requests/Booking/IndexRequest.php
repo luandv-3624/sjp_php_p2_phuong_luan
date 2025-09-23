@@ -30,6 +30,7 @@ class IndexRequest extends FormRequest
     {
         return [
             'userId' => 'sometimes|integer|exists:users,id',
+            'venueId' => 'sometimes|integer|exists:venues,id',
             'spaceId' => 'sometimes|integer|exists:spaces,id',
 
             'status' => [

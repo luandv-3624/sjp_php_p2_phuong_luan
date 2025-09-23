@@ -35,6 +35,14 @@ class VenueController extends Controller
         return $this->venueService->findAll($query, $query['pageSize'] ?? null);
     }
 
+    public function indexByUser(IndexRequest $request)
+    {
+        $user = $request->user();
+        $query = $request->validated();
+
+        return $this->venueService->findAll([...$query, 'userId' => $user->id], $query['pageSize'] ?? null);
+    }
+
     public function update(UpdateVenueRequest $request, Venue $venue)
     {
         $data = $request->validated();

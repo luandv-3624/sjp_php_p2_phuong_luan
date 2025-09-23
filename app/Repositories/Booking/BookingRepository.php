@@ -11,6 +11,7 @@ use App\Enums\SpaceStatus;
 use App\Enums\VenueStatus;
 use App\Models\Booking;
 use App\Models\Space;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -123,6 +124,73 @@ class BookingRepository implements BookingRepositoryInterface
         }
 
         return $booking;
+    }
+
+    public function findAllByOM(array $filter, ?int $pageSize, User $currentUser): LengthAwarePaginator
+    {
+        try {
+            $sortBy = BookingsSortBy::tryFrom($filter['sortBy'] ?? null) ?? BookingsSortBy::CREATED_AT;
+            $sortOrder = SortOrder::tryFrom($filter['sortOrder'] ?? null) ?? SortOrder::DESC;
+            $perPage = $pageSize ?? self::PAGE_SIZE;
+
+            $spaceId = $filter['spaceId'] ?? null;
+            $venueId = $filter['venueId'] ?? null;
+            $status = BookingStatus::tryFrom($filter['status'] ?? null);
+            $statusPayment = BookingPaymentStatus::tryFrom($filter['statusPayment'] ?? null);
+
+            $startTime = isset($filter['startTime'])
+                ? Carbon::parse($filter['startTime'])
+                : null;
+            $endTime = isset($filter['endTime'])
+                ? Carbon::parse($filter['endTime'])
+                : null;
+
+            $ownedVenueIds = $currentUser->ownedVenues()->pluck('id')->toArray();
+            $managedVenueIds = $currentUser->managedVenues()->pluck('id')->toArray();
+            $accessibleVenueIds = array_merge($ownedVenueIds, $managedVenueIds);
+
+            $bookings = Booking::with(['user', 'space.venue'])
+                ->when(isset($spaceId), function ($query) use ($spaceId) {
+                    $query->where('space_id', $spaceId);
+                })
+                ->when(isset($venueId), function ($query) use ($venueId) {
+                    // Nếu có venueId -> lọc đúng venue
+                    $query->whereHas('space.venue', function ($q) use ($venueId) {
+                        $q->where('id', $venueId);
+                    });
+                }, function ($query) use ($accessibleVenueIds) {
+                    // Nếu KHÔNG có venueId -> chỉ lấy booking của venue mà user có quyền
+                    $query->whereHas('space.venue', function ($q) use ($accessibleVenueIds) {
+                        $q->whereIn('id', $accessibleVenueIds);
+                    });
+                })
+                ->when(isset($venueId), function ($query) use ($venueId) {
+                    $query->whereHas('space.venue', function ($q) use ($venueId) {
+                        $q->where('id', $venueId);
+                    });
+                })
+                ->when(isset($status), function ($query) use ($status) {
+                    $query->where('status', $status->value);
+                })
+                ->when(isset($statusPayment), function ($query) use ($statusPayment) {
+                    $query->where('status_payment', $statusPayment->value);
+                })
+                ->when(isset($startTime), function ($query) use ($startTime) {
+                    $query->where('start_time', '>=', $startTime);
+                })
+                ->when(isset($endTime), function ($query) use ($endTime) {
+                    $query->where('end_time', '<=', $endTime);
+                })
+                ->orderBy($sortBy->value, $sortOrder->value)
+                ->paginate($perPage);
+
+            return $bookings;
+        } catch (\Exception $e) {
+            Log::error('Fetch all bookings failed: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
     }
 
     public function findAll(array $filter, ?int $pageSize): LengthAwarePaginator
