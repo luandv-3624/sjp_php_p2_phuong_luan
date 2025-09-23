@@ -41,6 +41,7 @@ Route::prefix('users')->middleware(['auth:sanctum', 'checkAccessTokenExpiry', 'r
     Route::get('/', [UserController::class, 'index'])->name('users.index');
     Route::put('/{user}', [UserController::class, 'update'])->name('users.update')->middleware(['role:admin'])->can('update', 'user');
     Route::put('/{user}/status', [UserController::class, 'updateStatus'])->name('users.update-status')->can('update', 'user');
+    Route::get('/simple-list', [UserController::class, 'listSimple'])->name('users.simple-list');
 });
 
 Route::middleware(['auth:sanctum', 'checkAccessTokenExpiry'])->group(function () {

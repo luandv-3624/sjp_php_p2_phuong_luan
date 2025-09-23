@@ -10,6 +10,7 @@ use App\Models\Role;
 use Illuminate\Support\Facades\Log;
 use App\Enums\AccountStatus;
 use App\Enums\Role as EnumsRole;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
@@ -200,5 +201,10 @@ class UserRepository implements UserRepositoryInterface
         }
 
         return $user;
+    }
+
+    public function findAllSimple(): Collection
+    {
+        return User::select('id', 'name', 'email')->orderBy('name')->get();
     }
 }

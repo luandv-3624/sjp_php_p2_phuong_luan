@@ -22,4 +22,9 @@ class UserService implements UserServiceInterface
     {
         return ApiResponse::success(new UserResource($this->userRepo->updateOne($id, $data)));
     }
+
+    public function findAllSimple(): JsonResponse
+    {
+        return ApiResponse::success($this->userRepo->findAllSimple());
+    }
 }

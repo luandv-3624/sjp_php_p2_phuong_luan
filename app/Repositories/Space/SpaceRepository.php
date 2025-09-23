@@ -64,9 +64,30 @@ class SpaceRepository implements SpaceRepositoryInterface
         return $space;
     }
 
-    public function findAllByVenue(int $venueId): Collection
+    public function findAllByVenue(int $venueId, array $filters, ?int $pageSize): LengthAwarePaginator
     {
-        return Space::with(['type', 'priceType'])->where('venue_id', $venueId)->orderBy('created_at', 'desc')->get();
+        $name = $filters['name'] ?? null;
+        $spaceTypeId = $filters['spaceTypeId'] ?? null;
+        $priceTypeId = $filters['priceTypeId'] ?? null;
+        $pageSize = $pageSize ?? self::PAGE_SIZE;
+
+        $query = Space::query()->with(['venue.ward.province', 'type', 'priceType'])->where('venue_id', $venueId);
+
+        if ($name) {
+            $query->where('spaces.name', 'like', '%' . $name . '%');
+        }
+
+        if ($spaceTypeId) {
+            $query->where('space_type_id', $spaceTypeId);
+        }
+
+        if ($priceTypeId) {
+            $query->where('price_type_id', $priceTypeId);
+        }
+
+        return $query
+            ->orderBy('updated_at', 'desc')
+            ->paginate($pageSize);
     }
 
     public function findAll(array $filters, ?int $pageSize): LengthAwarePaginator

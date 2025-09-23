@@ -156,19 +156,20 @@ class VenueRepository implements VenueRepositoryInterface
 
         $userIds = array_map('intval', $userIds);
 
-        $venue->managers()->syncWithoutDetaching($userIds);
+        $venue->managers()->sync($userIds);
 
         return $venue->load('managers');
     }
 
-    public function findAllByUser(int $userId)
-    {
-        $venues = Venue::leftJoin('venue_managers', 'venues.id', '=', 'venue_managers.venue_id')
-            ->where('venues.owner_id', $userId)
-            ->orWhere('venue_managers.user_id', $userId)
-            ->orderBy('venues.updated_at', 'desc')
-            ->paginate(self::PAGE_SIZE);
+public function findAllByUser(int $userId)
+{
+    $venues = Venue::with(['managers'])->where('owner_id', $userId)
+      ->orWhereHas('managers', function($query) use ($userId) {
+          $query->where('user_id', $userId);
+      })
+      ->orderBy('updated_at', 'desc')
+      ->paginate(self::PAGE_SIZE);
 
-        return $venues;
-    }
+    return $venues;
+}
 }
