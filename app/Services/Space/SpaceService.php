@@ -28,9 +28,9 @@ class SpaceService implements SpaceServiceInterface
         return ApiResponse::success(new SpaceResource($this->spaceRepo->findById($id)));
     }
 
-    public function findAllByVenue(int $venueId): JsonResponse
+    public function findAllByVenue(int $venueId, array $filters, ?int $pageSize): JsonResponse
     {
-        return ApiResponse::success(SpaceResource::collection($this->spaceRepo->findAllByVenue($venueId)));
+        return ApiResponse::success(new SpaceCollection($this->spaceRepo->findAllByVenue($venueId, $filters, $pageSize)));
     }
 
     public function findAll(array $filters, ?int $pageSize): JsonResponse

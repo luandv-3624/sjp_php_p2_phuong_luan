@@ -9,4 +9,6 @@ interface UserServiceInterface
     public function findAll(array $filter, ?int $pageSize): JsonResponse;
 
     public function updateOne(int $id, array $data): JsonResponse;
+
+    public function findAllSimple(): JsonResponse;
 }

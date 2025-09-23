@@ -11,7 +11,7 @@ interface SpaceRepositoryInterface
     public function create(array $data): Space;
     public function updateById(int $id, array $data): Space;
     public function findById(int $id): Space;
-    public function findAllByVenue(int $venueId): Collection;
+    public function findAllByVenue(int $venueId, array $filters, ?int $pageSize): LengthAwarePaginator;
     public function findAll(array $filters, ?int $pageSize): LengthAwarePaginator;
     public function findAllPriceTypes(): Collection;
     public function findAllSpaceTypes(): Collection;

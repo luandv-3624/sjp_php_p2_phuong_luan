@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Space\IndexByVenueRequest;
 use App\Http\Requests\Space\IndexRequest;
 use App\Http\Requests\Space\StoreRequest;
 use App\Http\Requests\Space\UpdateRequest;
@@ -32,9 +33,9 @@ class SpaceController extends BaseApiController
         return $this->spaceService->findById($space->id);
     }
 
-    public function indexByVenue(Venue $venue): JsonResponse
+    public function indexByVenue(IndexByVenueRequest $request, Venue $venue): JsonResponse
     {
-        return $this->spaceService->findAllByVenue($venue->id);
+        return $this->spaceService->findAllByVenue($venue->id, $request->validated(), $request->get('pageSize'));
     }
 
     public function index(IndexRequest $request): JsonResponse

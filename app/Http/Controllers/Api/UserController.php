@@ -41,4 +41,9 @@ class UserController extends BaseApiController
 
         return $this->userService->updateOne($user->id, $data);
     }
+
+    public function listSimple(): JsonResponse
+    {
+        return $this->userService->findAllSimple();
+    }
 }

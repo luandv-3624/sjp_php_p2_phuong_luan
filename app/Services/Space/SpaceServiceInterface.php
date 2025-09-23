@@ -9,7 +9,7 @@ interface SpaceServiceInterface
     public function create(array $data): JsonResponse;
     public function updateById(int $id, array $data): JsonResponse;
     public function findById(int $id): JsonResponse;
-    public function findAllByVenue(int $venueId): JsonResponse;
+    public function findAllByVenue(int $venueId, array $filters, ?int $pageSize): JsonResponse;
     public function findAll(array $filters, ?int $pageSize): JsonResponse;
     public function findAllPriceTypes(): JsonResponse;
     public function findAllSpaceTypes(): JsonResponse;

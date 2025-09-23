@@ -4,6 +4,7 @@ namespace App\Repositories\User;
 
 use App\Models\User;
 use App\Models\Role;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 interface UserRepositoryInterface
@@ -15,4 +16,5 @@ interface UserRepositoryInterface
     public function updatePassword(int $id, string $password): bool;
     public function findAll(array $filter, ?int $pageSize): LengthAwarePaginator;
     public function updateOne(int $id, array $data): User;
+    public function findAllSimple(): Collection;
 }
