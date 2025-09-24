@@ -28,6 +28,7 @@ Route::prefix('auth')->group(function () {
     Route::post('resend-verification', [AuthController::class, 'resendVerification'])
         ->middleware('throttle:resend-verification')->name('auth.resend');
     Route::post('login', [AuthController::class, 'login'])->name('auth.login');
+    Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout')->middleware('checkAccessTokenExpiry');
     Route::post('refresh-token', [AuthController::class, 'refreshToken'])->name('auth.refresh');
     Route::post('password/forgot-password', [AuthController::class, 'requestPasswordReset'])
         ->middleware('throttle:password-reset');
