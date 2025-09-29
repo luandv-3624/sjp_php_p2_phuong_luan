@@ -25,5 +25,18 @@ return [
     'already_checked_out'          => 'You have already checked out.',
     'invalid_checkout_time'        => 'Check-out time must be between check-in time and end time.',
     'checkout_success'             => 'Checked out successfully.',
-
+    'notification' => [
+        'confirmed_unpaid' => [
+            'title' => 'Booking confirmed',
+            'message' => 'Your booking #:id has been confirmed. Please complete the payment.',
+        ],
+        'rejected' => [
+            'title' => 'Booking rejected',
+            'message' => 'Your booking #:id has been rejected. Please contact support for more details.',
+        ],
+        'accepted' => [
+            'title' => 'Booking accepted',
+            'message' => 'Your booking #:id has been accepted. We look forward to serving you.',
+        ],
+    ],
 ];

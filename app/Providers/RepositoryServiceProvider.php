@@ -31,6 +31,10 @@ use App\Repositories\Payment\PaymentRepositoryInterface;
 use App\Repositories\Payment\PaymentRepository;
 use App\Services\Payment\PaymentServiceInterface;
 use App\Services\Payment\PaymentService;
+use App\Repositories\Notification\NotificationRepositoryInterface;
+use App\Repositories\Notification\NotificationRepository;
+use App\Services\Notification\NotificationServiceInterface;
+use App\Services\Notification\NotificationService;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -53,8 +57,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(BookingServiceInterface::class, BookingService::class);
         $this->app->bind(PaymentRepositoryInterface::class, PaymentRepository::class);
         $this->app->bind(PaymentServiceInterface::class, PaymentService::class);
-        $this->app->bind(AddressRepositoryInterface::class, AddressRepository::class);
-        $this->app->bind(AddressServiceInterface::class, AddressService::class);
+        $this->app->bind(NotificationRepositoryInterface::class, NotificationRepository::class);
+        $this->app->bind(NotificationServiceInterface::class, NotificationService::class);
     }
 
     /**

@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Venue\VenueController;
 use App\Http\Controllers\Amenity\AmenityController;
 use App\Http\Controllers\Payment\PaymentController;
+use App\Http\Controllers\Api\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,7 +27,7 @@ Route::prefix('auth')->group(function () {
     Route::post('signup', [AuthController::class, 'signup'])->name('auth.signup');
     Route::post('verify', [AuthController::class, 'verify'])->name('auth.verify');
     Route::post('resend-verification', [AuthController::class, 'resendVerification'])
-        ->middleware('throttle:resend-verification')->name('auth.resend');
+        ->name('auth.resend');
     Route::post('login', [AuthController::class, 'login'])->name('auth.login');
     Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout')->middleware('checkAccessTokenExpiry');
     Route::post('refresh-token', [AuthController::class, 'refreshToken'])->name('auth.refresh');
@@ -42,8 +43,10 @@ Route::prefix('users')->middleware(['auth:sanctum', 'checkAccessTokenExpiry', 'r
     Route::get('/', [UserController::class, 'index'])->name('users.index');
     Route::put('/{user}', [UserController::class, 'update'])->name('users.update')->middleware(['role:admin'])->can('update', 'user');
     Route::put('/{user}/status', [UserController::class, 'updateStatus'])->name('users.update-status')->can('update', 'user');
-    Route::get('/simple-list', [UserController::class, 'listSimple'])->name('users.simple-list');
+    Route::get('/{user}/notifications', [NotificationController::class, 'indexNotiByUser']);
 });
+
+Route::get('/users/simple-list', [UserController::class, 'listSimple'])->name('users.simple-list');
 
 Route::middleware(['auth:sanctum', 'checkAccessTokenExpiry'])->group(function () {
     Route::prefix('venues')->group(function () {
@@ -97,6 +100,11 @@ Route::middleware(['auth:sanctum', 'checkAccessTokenExpiry'])->group(function ()
 
     Route::prefix('payment')->group(function () {
         Route::post('/momo', [PaymentController::class, 'payWithMomo'])->middleware('throttle:momo-user');
+    });
+
+    Route::prefix('notifications')->group(function () {
+        Route::get('/me', [NotificationController::class, 'indexByUser']);
+        Route::put('/{notification}', [NotificationController::class, 'markRead']);
     });
 });
 

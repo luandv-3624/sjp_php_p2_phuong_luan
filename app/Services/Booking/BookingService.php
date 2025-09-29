@@ -15,10 +15,14 @@ use App\Mail\BookingStatusChangedMail;
 use App\Enums\HttpStatusCode;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Events\NotificationCreated;
+use App\Models\Notification;
+use App\Helpers\NotificationHelper;
+use App\Repositories\Notification\NotificationRepositoryInterface;
 
 class BookingService implements BookingServiceInterface
 {
-    public function __construct(private BookingRepositoryInterface $bookingRepo)
+    public function __construct(private BookingRepositoryInterface $bookingRepo, private NotificationRepositoryInterface $notificationRepo)
     {
     }
 
@@ -64,6 +68,24 @@ class BookingService implements BookingServiceInterface
                 BookingStatus::REJECTED->value,
                 BookingStatus::ACCEPTED->value,
             ])) {
+                [$title, $message] = NotificationHelper::getBookingNotificationText($newStatus, $booking->id);
+
+                $data = [
+                    'user_id' => $booking->user_id,
+                    'title' => $title,
+                    'message' => $message,
+                    'data' => [
+                        'type' => 'booking',
+                        'id' => $booking->id,
+                        'url' => "/bookings/{$booking->id}",
+                        'new_status' => $newStatus,
+                    ],
+                ];
+
+                $notification = $this->notificationRepo->create($data);
+
+                event(new NotificationCreated($notification));
+
                 Mail::to($booking->user->email)
                     ->queue(new BookingStatusChangedMail($booking, $newStatus));
             }

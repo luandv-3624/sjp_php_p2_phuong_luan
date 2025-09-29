@@ -25,4 +25,18 @@ return [
     'already_checked_out'          => 'Bạn đã check-out rồi.',
     'invalid_checkout_time'        => 'Thời gian check-out phải nằm giữa lúc check-in và thời gian kết thúc.',
     'checkout_success'             => 'Check-out thành công.',
+    'notification' => [
+        'confirmed_unpaid' => [
+            'title' => 'Đặt chỗ đã được xác nhận',
+            'message' => 'Đặt chỗ #:id của bạn đã được xác nhận. Vui lòng hoàn tất thanh toán.',
+        ],
+        'rejected' => [
+            'title' => 'Đặt chỗ bị từ chối',
+            'message' => 'Đặt chỗ #:id của bạn đã bị từ chối. Vui lòng liên hệ hỗ trợ để biết thêm chi tiết.',
+        ],
+        'accepted' => [
+            'title' => 'Đặt chỗ được chấp nhận',
+            'message' => 'Đặt chỗ #:id của bạn đã được chấp nhận. Chúng tôi rất hân hạnh phục vụ bạn.',
+        ],
+    ],
 ];
