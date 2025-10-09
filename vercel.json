@@ -5,10 +5,11 @@
             "runtime": "vercel-php@0.7.4"
         }
     },
-    "routes": [
+    "rewrites": [
         {
-            "src": "/(.*)",
-            "dest": "/api/lambda.php"
+            "source": "/(.*)",
+            "destination": "/api/lambda.php"
         }
-    ]
+    ],
+    "buildCommand": "composer install --no-dev --optimize-autoloader"
 }
