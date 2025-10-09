@@ -1,16 +1,15 @@
 {
     "$schema": "https://openapi.vercel.sh/vercel.json",
-    "buildCommand": "composer install --no-dev --optimize-autoloader",
-    "ignoreCommand": "true",
     "functions": {
-        "api/lambda.php": {
+        "api/index.php": {
             "runtime": "vercel-php@0.7.4"
         }
     },
     "rewrites": [
         {
             "source": "/(.*)",
-            "destination": "/api/lambda.php"
+            "destination": "/api/index.php"
         }
-    ]
+    ],
+    "buildCommand": "composer install --no-dev --optimize-autoloader"
 }
