@@ -13,6 +13,8 @@ RUN composer install --no-dev --optimize-autoloader
 
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-EXPOSE 8000
+COPY ./supervisord.conf /etc/supervisord.conf
 
-CMD php artisan serve --host=0.0.0.0 --port=8000
+EXPOSE 8000 6001
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
