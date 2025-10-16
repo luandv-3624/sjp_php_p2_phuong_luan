@@ -10,7 +10,9 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 RUN chown -R www-data:www-data storage bootstrap/cache
+RUN php artisan config:clear && php artisan cache:clear
 
 EXPOSE 6001
+
 CMD php artisan websockets:serve --host=0.0.0.0 --port=${PORT}
 
