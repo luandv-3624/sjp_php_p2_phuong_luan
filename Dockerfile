@@ -1,18 +1,16 @@
 FROM php:8.2-fpm
 
-RUN apt-get update && apt-get install -y \
-    libpng-dev libjpeg-dev libfreetype6-dev zip git unzip curl libonig-dev libxml2-dev \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+RUN apt-get update && apt-get install -y zip unzip curl git libpng-dev libonig-dev libxml2-dev \
+    && docker-php-ext-install pdo_mysql mbstring bcmath
 
-COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
+RUN chown -R www-data:www-data storage bootstrap/cache
 
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+EXPOSE 6001
+CMD php artisan websockets:serve --host=0.0.0.0 --port=6001
 
-EXPOSE 8000
-
-CMD php artisan serve --host=0.0.0.0 --port=8000
