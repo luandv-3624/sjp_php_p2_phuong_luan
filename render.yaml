@@ -1,15 +1,15 @@
 services:
   - type: web
-    name: laravel-app
+    name: laravel-api
     env: docker
-    plan: starter
-    autoDeploy: true
+    plan: free
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: APP_ENV
         value: production
       - key: APP_KEY
-        sync: false
-      - key: APP_URL
-        value: https://sjp-php-p2-phuong-luan.onrender.com
-      - key: PORT
-        value: 80
+        generateValue: true
+      - key: APP_DEBUG
+        value: false
+      - key: DB_CONNECTION
+        value: mysql
